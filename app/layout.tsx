@@ -6,24 +6,34 @@ import ClientProvider from "@/components/providers/client";
 import "./globals.css";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { ViewTransitions } from "next-view-transitions";
+import { NuqsAdapter } from "nuqs/adapters/next/app";
 
 export const metadata: Metadata = {
   title: {
-    template: "%s | UAS Menayapa",
-    default: "UAS Menayapa",
+    template: "%s | UAS Menyapa",
+    default: "UAS Menyapa",
   },
   description: "UAS Menyapa",
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <ViewTransitions>
-      <html lang='en'>
+      <html lang="en">
         <body className={`${GeistSans.className} antialiased`}>
           <ClientProvider>
             <SessionProvider>
-              <ThemeProvider attribute='class' defaultTheme='system' enableSystem disableTransitionOnChange>
-                {children}
+              <ThemeProvider
+                attribute="class"
+                defaultTheme="system"
+                enableSystem
+                disableTransitionOnChange
+              >
+                <NuqsAdapter>{children}</NuqsAdapter>
                 <Toaster />
               </ThemeProvider>
             </SessionProvider>

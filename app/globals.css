@@ -70,3 +70,37 @@ body {
     @apply bg-background text-foreground;
   }
 }
+
+@-webkit-keyframes progressAnimation {
+  0% {
+    width: 0%;
+  }
+  100% {
+    width: 100%;
+  }
+}
+
+@keyframes progressAnimation {
+  0% {
+    width: 0%;
+  }
+  100% {
+    width: 100%;
+  }
+}
+
+.progress-animation {
+  position: relative;
+  overflow: hidden;
+}
+
+.progress-animation::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background-color: hsl(var(--primary));
+  -webkit-animation: progressAnimation 1s ease-in forwards;
+  animation: progressAnimation 1s ease-in forwards;
+}

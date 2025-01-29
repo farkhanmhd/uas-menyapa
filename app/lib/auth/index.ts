@@ -3,5 +3,5 @@
 import { signIn } from "@/auth";
 
 export const loginAction = async () => {
-  await signIn("google", { redirectTo: "/" });
+  await signIn("google");
 };

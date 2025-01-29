@@ -5,9 +5,9 @@ config({ path: ".env.local" });
 
 export default defineConfig({
   out: "./drizzle/migrations",
-  schema: "./db/schema.ts",
+  schema: "./db/schema",
   dialect: "mysql",
   dbCredentials: {
-    url: process.env.DATABASE_URL!,
+    url: process.env.AUTH_DRIZZLE_URL!,
   },
 });

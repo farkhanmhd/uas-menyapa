@@ -11,11 +11,20 @@ export default function ThemeSwitch() {
   const { theme, setTheme } = useTheme();
 
   return (
-    <div className='inline-flex items-center gap-2'>
-      <Switch id={id} checked={theme === "dark"} onCheckedChange={() => setTheme(theme === "dark" ? "light" : "dark")} aria-label='Toggle switch' />
-      <Label htmlFor={id}>
-        <span className='sr-only'>Toggle switch</span>
-        {theme === "light" ? <PiSun size={16} strokeWidth={2} aria-hidden='true' /> : <PiMoonStars size={16} strokeWidth={2} aria-hidden='true' />}
+    <div className="inline-flex items-center gap-2">
+      <Switch
+        id={id}
+        checked={theme === "dark"}
+        onCheckedChange={() => setTheme(theme === "dark" ? "light" : "dark")}
+        aria-label="Toggle switch"
+      />
+      <Label htmlFor={id} className="text-green-foreground">
+        <span className="sr-only">Toggle switch</span>
+        {theme === "light" ? (
+          <PiSun size={16} strokeWidth={2} aria-hidden="true" />
+        ) : (
+          <PiMoonStars size={16} strokeWidth={2} aria-hidden="true" />
+        )}
       </Label>
     </div>
   );
