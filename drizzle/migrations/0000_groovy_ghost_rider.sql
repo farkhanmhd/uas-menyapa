@@ -57,6 +57,38 @@ CREATE TABLE `verificationToken` (
 	CONSTRAINT `verificationToken_identifier_token_pk` PRIMARY KEY(`identifier`,`token`)
 );
 --> statement-breakpoint
+CREATE TABLE `event_availability` (
+	`id` varchar(50) NOT NULL,
+	`event_id` varchar(50) NOT NULL,
+	`reguler_availability` int NOT NULL,
+	`vip_availability` int NOT NULL,
+	`ordered_vip` int NOT NULL DEFAULT 0,
+	`ordered_reguler` int NOT NULL DEFAULT 0,
+	`created_at` timestamp NOT NULL DEFAULT (now()),
+	`updated_at` timestamp NOT NULL DEFAULT (now()),
+	CONSTRAINT `event_availability_id` PRIMARY KEY(`id`)
+);
+--> statement-breakpoint
+CREATE TABLE `event_price` (
+	`id` varchar(50) NOT NULL,
+	`event_id` varchar(50) NOT NULL,
+	`reguler` int NOT NULL,
+	`vip` int NOT NULL,
+	`created_at` timestamp NOT NULL DEFAULT (now()),
+	`updated_at` timestamp NOT NULL DEFAULT (now()),
+	CONSTRAINT `event_price_id` PRIMARY KEY(`id`)
+);
+--> statement-breakpoint
+CREATE TABLE `event_questions` (
+	`id` varchar(50) NOT NULL,
+	`event_id` varchar(50) NOT NULL,
+	`question` varchar(255) NOT NULL,
+	`answer` varchar(255) NOT NULL,
+	`created_at` timestamp NOT NULL DEFAULT (now()),
+	`updated_at` timestamp NOT NULL DEFAULT (now()),
+	CONSTRAINT `event_questions_id` PRIMARY KEY(`id`)
+);
+--> statement-breakpoint
 CREATE TABLE `events` (
 	`id` varchar(50) NOT NULL,
 	`title` varchar(255) NOT NULL,
@@ -66,11 +98,7 @@ CREATE TABLE `events` (
 	`city` varchar(255) NOT NULL,
 	`start_time` timestamp NOT NULL,
 	`end_time` timestamp NOT NULL,
-	`ticket_stock` json NOT NULL,
-	`purchased_tickets` json NOT NULL DEFAULT ('{"reguler":0,"vip":0}'),
-	`price` json NOT NULL,
 	`gmap_url` varchar(255) NOT NULL,
-	`faqs` json NOT NULL,
 	`created_at` timestamp NOT NULL DEFAULT (now()),
 	`updated_at` timestamp NOT NULL DEFAULT (now()),
 	CONSTRAINT `events_id` PRIMARY KEY(`id`)
@@ -78,4 +106,7 @@ CREATE TABLE `events` (
 --> statement-breakpoint
 ALTER TABLE `account` ADD CONSTRAINT `account_userId_user_id_fk` FOREIGN KEY (`userId`) REFERENCES `user`(`id`) ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE `authenticator` ADD CONSTRAINT `authenticator_userId_user_id_fk` FOREIGN KEY (`userId`) REFERENCES `user`(`id`) ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE `session` ADD CONSTRAINT `session_userId_user_id_fk` FOREIGN KEY (`userId`) REFERENCES `user`(`id`) ON DELETE cascade ON UPDATE no action;
+ALTER TABLE `session` ADD CONSTRAINT `session_userId_user_id_fk` FOREIGN KEY (`userId`) REFERENCES `user`(`id`) ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE `event_availability` ADD CONSTRAINT `event_availability_event_id_events_id_fk` FOREIGN KEY (`event_id`) REFERENCES `events`(`id`) ON DELETE no action ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE `event_price` ADD CONSTRAINT `event_price_event_id_events_id_fk` FOREIGN KEY (`event_id`) REFERENCES `events`(`id`) ON DELETE no action ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE `event_questions` ADD CONSTRAINT `event_questions_event_id_events_id_fk` FOREIGN KEY (`event_id`) REFERENCES `events`(`id`) ON DELETE no action ON UPDATE no action;

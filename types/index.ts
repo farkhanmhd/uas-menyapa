@@ -13,11 +13,6 @@ export interface FAQ {
   question: string;
 }
 
-export interface Variant {
-  vip: number;
-  reguler: number;
-}
-
 export interface IEvent {
   id: string;
   title: string;
@@ -25,13 +20,15 @@ export interface IEvent {
   description: string;
   venue: string;
   city: string;
+  gmapUrl: string;
   startTime: Date;
   endTime: Date;
-  ticketStock: Variant;
-  purchasedTickets: Variant;
-  price: Variant;
-  gmapUrl: string;
-  faqs: FAQ[];
-  createdAt: Date;
-  updatedAt: Date;
+  vipAvailability: number;
+  regulerAvailability: number;
+  orderedVip: number;
+  orderedReguler: number;
+  vipPrice: number;
+  regulerPrice: number;
+  questions: string[];
+  answers: string[];
 }

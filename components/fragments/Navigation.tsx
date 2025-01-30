@@ -1,8 +1,9 @@
 "use client";
 
+import { useActionState } from "react";
 import Image from "next/image";
 import { Link } from "next-view-transitions";
-import { signIn, signOut } from "next-auth/react";
+import { signIn } from "next-auth/react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -16,8 +17,22 @@ import { GoogleLoginDialog } from "@/components/fragments/google-login";
 import { Menu } from "lucide-react";
 import { type User } from "next-auth";
 import ThemeSwitch from "@/components/elements/theme-switch";
+import LogOutDialog from "./LogoutDialog";
+import {
+  AlertDialog,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import { logoutAction } from "@/app/lib/auth";
 
 export default function Navigation({ user }: { user: User | null }) {
+  const [, action, isPending] = useActionState(logoutAction, null);
+
   const handleGoogleLogin = () => {
     signIn("google", { callbackUrl: "/" });
   };
@@ -59,33 +74,67 @@ export default function Navigation({ user }: { user: User | null }) {
             </Link>
             <ThemeSwitch />
             {user ? (
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    className="relative h-8 w-8 rounded-full"
-                  >
-                    <Avatar>
-                      <AvatarImage
-                        src={user?.image || ""}
-                        alt={user?.name || "User"}
-                      />
-                      <AvatarFallback>{user?.name?.[0] || "U"}</AvatarFallback>
-                    </Avatar>
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                  <DropdownMenuItem className="cursor-pointer">
-                    <Link href="/user">Riwayat Transaksi</Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem
-                    className="cursor-pointer"
-                    onClick={() => signOut()}
-                  >
-                    Log out
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
+              <AlertDialog>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      className="relative h-8 w-8 rounded-full"
+                    >
+                      <Avatar>
+                        <AvatarImage
+                          src={user?.image || ""}
+                          alt={user?.name || "User"}
+                        />
+                        <AvatarFallback>
+                          {user?.name?.[0] || "U"}
+                        </AvatarFallback>
+                      </Avatar>
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end">
+                    <DropdownMenuItem className="cursor-pointer">
+                      <Link href="/user">Riwayat Transaksi</Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem className="cursor-pointer p-0">
+                      <AlertDialogTrigger asChild>
+                        <Button
+                          variant="ghost"
+                          className="h-8 w-full justify-start px-2"
+                        >
+                          Logout
+                        </Button>
+                      </AlertDialogTrigger>
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>
+                      Are you absolutely sure?
+                    </AlertDialogTitle>
+                    <AlertDialogDescription>
+                      This action cannot be undone.
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel asChild>
+                      <Button variant="secondary" disabled={isPending}>
+                        Cancel
+                      </Button>
+                    </AlertDialogCancel>
+                    <form action={action}>
+                      <Button
+                        type="submit"
+                        variant="destructive"
+                        disabled={isPending}
+                      >
+                        {isPending ? "Logging out..." : "Logout"}
+                      </Button>
+                    </form>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
             ) : (
               <GoogleLoginDialog />
             )}
@@ -116,14 +165,14 @@ export default function Navigation({ user }: { user: User | null }) {
                 >
                   Contact
                 </Link>
-                <p className="flex items-center justify-between text-sm text-foreground hover:text-primary">
+                <span className="flex items-center justify-between text-sm text-foreground hover:text-primary">
                   Theme
                   <ThemeSwitch />
-                </p>
+                </span>
                 {user ? (
-                  <Button onClick={() => signOut()} className="w-full">
-                    Log out
-                  </Button>
+                  <LogOutDialog>
+                    <Button className="w-full">Logout</Button>
+                  </LogOutDialog>
                 ) : (
                   <Button onClick={handleGoogleLogin} className="w-full">
                     Login

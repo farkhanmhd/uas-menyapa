@@ -1,4 +1,4 @@
-import { count, sql, like, and, gte, lte } from "drizzle-orm";
+import { count, sql, and, gte, lte } from "drizzle-orm";
 import { NextRequest, NextResponse } from "next/server";
 import db from "@/db";
 import { events as eventsDb } from "@/db/schema/public";

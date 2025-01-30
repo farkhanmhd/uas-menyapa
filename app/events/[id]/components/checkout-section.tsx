@@ -15,7 +15,6 @@ import NumberInput from "@/components/fragments/NumberInput";
 import RadioVariant from "@/components/fragments/RadioVariant";
 import { GoogleLoginDialog } from "@/components/fragments/google-login";
 import { formatToIDR } from "@/lib/utils";
-import { Variant } from "@/types";
 
 const ticketVariant = [
   {
@@ -28,24 +27,25 @@ const ticketVariant = [
   },
 ];
 
+type Props = {
+  vipAvailability: number;
+  vipPrice: number;
+  regulerAvailability: number;
+  regulerPrice: number;
+};
+
 export default function CheckoutSection({
-  eventPrice,
-  stock,
-  purchased,
-}: {
-  eventPrice: Variant;
-  stock: Variant;
-  purchased: Variant;
-}) {
+  vipAvailability,
+  vipPrice,
+  regulerAvailability,
+  regulerPrice,
+}: Props) {
   const { data: session } = useSession();
   const [quantity, setQuantity] = useState(1);
   const [variant, setVariant] = useState<string>(ticketVariant[0].value);
-
-  const price = eventPrice[variant as keyof typeof eventPrice];
-  const maxPurchase =
-    stock[variant as keyof typeof stock] -
-    purchased[variant as keyof typeof purchased];
-  const total = price * quantity;
+  const selectedPrice = variant === "vip" ? vipPrice : regulerPrice;
+  const maxPurchase = variant === "vip" ? vipAvailability : regulerAvailability;
+  const total = selectedPrice * quantity;
 
   return (
     <Card className="rounded-none md:rounded-xl">
@@ -62,7 +62,9 @@ export default function CheckoutSection({
           />
           <div className="flex items-center justify-between">
             <Label>Harga Tiket</Label>
-            <p className="text-lg font-semibold">{formatToIDR(price)}</p>
+            <p className="text-lg font-semibold">
+              {formatToIDR(selectedPrice)}
+            </p>
           </div>
           <div className="flex items-center justify-between">
             <Label>Jumlah</Label>

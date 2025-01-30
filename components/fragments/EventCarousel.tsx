@@ -10,8 +10,8 @@ import type { IEventCard } from "@/types";
 export default async function EventCarousel() {
   const {
     events,
-    total,
-    limit,
+    // total,
+    // limit,
   }: { events: IEventCard[]; total: number; limit: number } = await getEvents({
     search: "",
   });

@@ -83,26 +83,27 @@ export function EventDetail({ ...props }: IEvent) {
               <h2 className="text-lg font-semibold">Ketersediaan Tiket</h2>
               <TicketStock
                 type="VIP"
-                stock={props.ticketStock.vip}
-                purchased={props.purchasedTickets.vip}
-                price={props.price.vip}
+                stock={props.vipAvailability}
+                purchased={props.orderedVip}
+                price={props.vipPrice}
               />
               <TicketStock
                 type="Regular"
-                stock={props.ticketStock.reguler}
-                purchased={props.purchasedTickets.reguler}
-                price={props.price.reguler}
+                stock={props.regulerAvailability}
+                purchased={props.orderedReguler}
+                price={props.regulerPrice}
               />
             </div>
           </CardContent>
         </Card>
-        <EventFAQ faqs={props.faqs} />
+        <EventFAQ questions={props.questions} answers={props.answers} />
       </div>
       <div className="fixed bottom-0 left-0 right-0 z-50 lg:sticky lg:top-[112px] lg:z-0 lg:col-span-3 lg:self-start">
         <CheckoutSection
-          eventPrice={props.price}
-          stock={props.ticketStock}
-          purchased={props.purchasedTickets}
+          vipAvailability={props.vipAvailability}
+          vipPrice={props.vipPrice}
+          regulerAvailability={props.regulerAvailability}
+          regulerPrice={props.regulerPrice}
         />
       </div>
     </div>
@@ -144,7 +145,7 @@ function TicketStock({
           </span>
         </p>
         <p className="text-sm text-muted-foreground">
-          {purchased} tiket terjual dari {stock}
+          {purchased} tiket telah dipesan dari total {stock} tiket
         </p>
       </div>
     </div>
