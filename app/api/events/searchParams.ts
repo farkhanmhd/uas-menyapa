@@ -1,4 +1,9 @@
-import { parseAsInteger, parseAsString, createLoader } from "nuqs/server";
+import {
+  parseAsInteger,
+  parseAsString,
+  createLoader,
+  parseAsStringLiteral,
+} from "nuqs/server";
 
 import { formatDate } from "date-fns";
 
@@ -15,3 +20,17 @@ export const eventSearchParams = {
 };
 
 export const loadEventSearchParams = createLoader(eventSearchParams);
+
+const orderStatusValues = [
+  "pending",
+  "active",
+  "cancelled",
+  "expired",
+] as const;
+export type OrderStatus = (typeof orderStatusValues)[number];
+
+export const ordersSearchParams = {
+  status: parseAsStringLiteral(orderStatusValues).withDefault("pending"),
+};
+
+export const loadOrdersSearchParams = createLoader(ordersSearchParams);

@@ -17,6 +17,7 @@ export default function NumberInput({ ...props }: NumberInputProps) {
       minValue={props.minValue}
       maxValue={props.maxValue}
       onChange={props.setValue}
+      aria-label="Numeric input"
     >
       <Group className="relative inline-flex h-9 w-full items-center overflow-hidden whitespace-nowrap rounded-lg border border-input text-sm shadow-sm shadow-black/5 transition-shadow data-[focus-within]:border-ring data-[disabled]:opacity-50 data-[focus-within]:outline-none">
         <Button

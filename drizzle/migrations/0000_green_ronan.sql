@@ -62,8 +62,6 @@ CREATE TABLE `event_availability` (
 	`event_id` varchar(50) NOT NULL,
 	`reguler_availability` int NOT NULL,
 	`vip_availability` int NOT NULL,
-	`ordered_vip` int NOT NULL DEFAULT 0,
-	`ordered_reguler` int NOT NULL DEFAULT 0,
 	`created_at` timestamp NOT NULL DEFAULT (now()),
 	`updated_at` timestamp NOT NULL DEFAULT (now()),
 	CONSTRAINT `event_availability_id` PRIMARY KEY(`id`)
@@ -104,9 +102,54 @@ CREATE TABLE `events` (
 	CONSTRAINT `events_id` PRIMARY KEY(`id`)
 );
 --> statement-breakpoint
+CREATE TABLE `orders` (
+	`id` varchar(50) NOT NULL,
+	`user_id` varchar(50) NOT NULL,
+	`event_id` varchar(50) NOT NULL,
+	`ticket_type` enum('reguler','vip') NOT NULL,
+	`payment_method` varchar(20) NOT NULL,
+	`order_qty` int NOT NULL DEFAULT 1,
+	`sub_total` int NOT NULL,
+	`order_status` enum('Pending','Active','Expired','Cancelled') DEFAULT 'Pending',
+	`created_at` timestamp NOT NULL DEFAULT (now()),
+	`updated_at` timestamp NOT NULL DEFAULT (now()),
+	CONSTRAINT `orders_id` PRIMARY KEY(`id`)
+);
+--> statement-breakpoint
+CREATE TABLE `payment_details` (
+	`id` varchar(50) NOT NULL,
+	`order_id` varchar(50) NOT NULL,
+	`transaction_id` varchar(50) NOT NULL,
+	`gross_amount` decimal(10,2) NOT NULL,
+	`currency` varchar(10) NOT NULL DEFAULT 'IDR',
+	`payment_type` enum('qris','gopay','bank_transfer','echannel') NOT NULL,
+	`transaction_time` timestamp NOT NULL,
+	`transaction_status` varchar(20) NOT NULL,
+	`fraud_status` varchar(20) NOT NULL,
+	`expiry_time` timestamp NOT NULL,
+	`qr_string` varchar(500),
+	`acquirer` varchar(50),
+	`va_numbers` json,
+	`bill_key` varchar(50),
+	`biller_code` varchar(50),
+	`permata_va_number` varchar(50),
+	`actions` json,
+	`created_at` timestamp NOT NULL DEFAULT (now()),
+	`updated_at` timestamp NOT NULL DEFAULT (now()),
+	CONSTRAINT `payment_details_id` PRIMARY KEY(`id`)
+);
+--> statement-breakpoint
 ALTER TABLE `account` ADD CONSTRAINT `account_userId_user_id_fk` FOREIGN KEY (`userId`) REFERENCES `user`(`id`) ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE `authenticator` ADD CONSTRAINT `authenticator_userId_user_id_fk` FOREIGN KEY (`userId`) REFERENCES `user`(`id`) ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE `session` ADD CONSTRAINT `session_userId_user_id_fk` FOREIGN KEY (`userId`) REFERENCES `user`(`id`) ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE `event_availability` ADD CONSTRAINT `event_availability_event_id_events_id_fk` FOREIGN KEY (`event_id`) REFERENCES `events`(`id`) ON DELETE no action ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE `event_price` ADD CONSTRAINT `event_price_event_id_events_id_fk` FOREIGN KEY (`event_id`) REFERENCES `events`(`id`) ON DELETE no action ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE `event_questions` ADD CONSTRAINT `event_questions_event_id_events_id_fk` FOREIGN KEY (`event_id`) REFERENCES `events`(`id`) ON DELETE no action ON UPDATE no action;
+ALTER TABLE `event_availability` ADD CONSTRAINT `event_availability_event_id_events_id_fk` FOREIGN KEY (`event_id`) REFERENCES `events`(`id`) ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE `event_price` ADD CONSTRAINT `event_price_event_id_events_id_fk` FOREIGN KEY (`event_id`) REFERENCES `events`(`id`) ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE `event_questions` ADD CONSTRAINT `event_questions_event_id_events_id_fk` FOREIGN KEY (`event_id`) REFERENCES `events`(`id`) ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE `orders` ADD CONSTRAINT `orders_user_id_user_id_fk` FOREIGN KEY (`user_id`) REFERENCES `user`(`id`) ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE `orders` ADD CONSTRAINT `orders_event_id_events_id_fk` FOREIGN KEY (`event_id`) REFERENCES `events`(`id`) ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE `payment_details` ADD CONSTRAINT `payment_details_order_id_orders_id_fk` FOREIGN KEY (`order_id`) REFERENCES `orders`(`id`) ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+CREATE INDEX `idx_event` ON `event_availability` (`event_id`);--> statement-breakpoint
+CREATE INDEX `idx_event_ticket` ON `orders` (`event_id`,`ticket_type`);--> statement-breakpoint
+CREATE INDEX `idx_user` ON `orders` (`user_id`);--> statement-breakpoint
+CREATE INDEX `idx_order` ON `payment_details` (`order_id`);--> statement-breakpoint
+CREATE INDEX `idx_transaction` ON `payment_details` (`transaction_id`);

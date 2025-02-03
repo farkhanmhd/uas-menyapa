@@ -94,7 +94,7 @@ export default function Navigation({ user }: { user: User | null }) {
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end">
                     <DropdownMenuItem className="cursor-pointer">
-                      <Link href="/user">Riwayat Transaksi</Link>
+                      <Link href="/orders">Riwayat Transaksi</Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem className="cursor-pointer p-0">
                       <AlertDialogTrigger asChild>

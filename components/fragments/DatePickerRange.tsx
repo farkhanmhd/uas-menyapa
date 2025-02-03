@@ -28,6 +28,7 @@ export function DatePickerRange({ ...props }: Props) {
       className="space-y-2"
       value={props.value}
       onChange={props.setValue}
+      aria-label="Date picker range"
     >
       {props.label && (
         <Label className="text-sm font-medium text-foreground">

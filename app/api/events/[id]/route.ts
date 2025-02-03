@@ -27,8 +27,6 @@ export async function GET(
         endTime: eventDb.endTime,
         vipAvailability: eventAvailability.vipAvailability,
         regulerAvailability: eventAvailability.regulerAvailability,
-        orderedVip: eventAvailability.orderedVip,
-        orderedReguler: eventAvailability.orderedReguler,
         vipPrice: eventPrice.vip,
         regulerPrice: eventPrice.reguler,
         questions: sql`JSON_ARRAYAGG(${eventQuestions.question})`,
@@ -43,8 +41,6 @@ export async function GET(
         eventDb.id,
         eventAvailability.vipAvailability,
         eventAvailability.regulerAvailability,
-        eventAvailability.orderedVip,
-        eventAvailability.orderedReguler,
         eventPrice.vip,
         eventPrice.reguler,
       );

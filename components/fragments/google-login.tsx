@@ -20,7 +20,7 @@ export function GoogleLoginDialog({ label = "Login" }: { label?: string }) {
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
-        {label && <Button>{label}</Button>}
+        {label && <Button className="w-full">{label}</Button>}
       </AlertDialogTrigger>
       <AlertDialogContent className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 sm:max-w-[425px]">
         <AlertDialogHeader>

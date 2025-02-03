@@ -1,8 +1,18 @@
-import { timestamp, mysqlTable, varchar, int } from "drizzle-orm/mysql-core";
+import {
+  timestamp,
+  mysqlTable,
+  varchar,
+  int,
+  mysqlEnum,
+  index,
+  decimal,
+  json,
+} from "drizzle-orm/mysql-core";
 import { randomUUID } from "crypto";
 import { relations } from "drizzle-orm";
-// import { users } from "./authentication";
+import { users } from "./authentication";
 
+/** 🎟 Events Table */
 export const events = mysqlTable("events", {
   id: varchar("id", { length: 50 })
     .primaryKey()
@@ -19,59 +29,156 @@ export const events = mysqlTable("events", {
   updatedAt: timestamp("updated_at", { mode: "string" }).notNull().defaultNow(),
 });
 
-export type Event = typeof events.$inferSelect;
-export type EventInsert = typeof events.$inferInsert;
+/** 🎫 Event Availability */
+export const eventAvailability = mysqlTable(
+  "event_availability",
+  {
+    id: varchar("id", { length: 50 })
+      .primaryKey()
+      .$defaultFn(() => `ea-${randomUUID()}`),
+    eventId: varchar("event_id", { length: 50 })
+      .notNull()
+      .references(() => events.id, { onDelete: "cascade" }),
+    regulerAvailability: int("reguler_availability").notNull(),
+    vipAvailability: int("vip_availability").notNull(),
+    createdAt: timestamp("created_at", { mode: "string" })
+      .notNull()
+      .defaultNow(),
+    updatedAt: timestamp("updated_at", { mode: "string" })
+      .notNull()
+      .defaultNow(),
+  },
+  (table) => ({
+    idx_event: index("idx_event").on(table.eventId),
+  }),
+);
 
-export const eventAvailability = mysqlTable("event_availability", {
-  id: varchar("id", { length: 50 })
-    .primaryKey()
-    .$defaultFn(() => `ea-${randomUUID()}`),
-  eventId: varchar("event_id", { length: 50 })
-    .notNull()
-    .references(() => events.id),
-  regulerAvailability: int("reguler_availability").notNull(),
-  vipAvailability: int("vip_availability").notNull(),
-  orderedVip: int("ordered_vip").notNull().default(0),
-  orderedReguler: int("ordered_reguler").notNull().default(0),
-  createdAt: timestamp("created_at", { mode: "string" }).notNull().defaultNow(),
-  updatedAt: timestamp("updated_at", { mode: "string" }).notNull().defaultNow(),
-});
-
+/** 💰 Event Pricing */
 export const eventPrice = mysqlTable("event_price", {
   id: varchar("id", { length: 50 })
     .primaryKey()
     .$defaultFn(() => `ep-${randomUUID()}`),
   eventId: varchar("event_id", { length: 50 })
     .notNull()
-    .references(() => events.id),
+    .references(() => events.id, { onDelete: "cascade" }),
   reguler: int("reguler").notNull(),
   vip: int("vip").notNull(),
   createdAt: timestamp("created_at", { mode: "string" }).notNull().defaultNow(),
   updatedAt: timestamp("updated_at", { mode: "string" }).notNull().defaultNow(),
 });
 
-export type EventAvailability = typeof eventAvailability.$inferSelect;
-export type EventAvailabilityInsert = typeof eventAvailability.$inferInsert;
-
-export type EventPrice = typeof eventPrice.$inferSelect;
-export type EventPriceInsert = typeof eventPrice.$inferInsert;
-
+/** ❓ Event Questions */
 export const eventQuestions = mysqlTable("event_questions", {
   id: varchar("id", { length: 50 })
     .primaryKey()
     .$defaultFn(() => `eq-${randomUUID()}`),
   eventId: varchar("event_id", { length: 50 })
     .notNull()
-    .references(() => events.id),
+    .references(() => events.id, { onDelete: "cascade" }),
   question: varchar("question", { length: 255 }).notNull(),
   answer: varchar("answer", { length: 255 }).notNull(),
   createdAt: timestamp("created_at", { mode: "string" }).notNull().defaultNow(),
   updatedAt: timestamp("updated_at", { mode: "string" }).notNull().defaultNow(),
 });
 
-export type EventQuestion = typeof eventQuestions.$inferSelect;
-export type EventQuestionInsert = typeof eventQuestions.$inferInsert;
+/** 🛒 Orders Table */
+export const orders = mysqlTable(
+  "orders",
+  {
+    id: varchar("id", { length: 50 })
+      .primaryKey()
+      .$defaultFn(() => `order-${randomUUID()}`),
+    userId: varchar("user_id", { length: 50 })
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    eventId: varchar("event_id", { length: 50 })
+      .notNull()
+      .references(() => events.id, { onDelete: "cascade" }),
+    ticketType: mysqlEnum("ticket_type", ["reguler", "vip"]).notNull(),
+    paymentMethod: varchar("payment_method", { length: 20 }).notNull(),
+    orderQty: int("order_qty").notNull().default(1),
+    subTotal: int("sub_total").notNull(),
+    orderStatus: mysqlEnum("order_status", [
+      "Pending",
+      "Active",
+      "Expired",
+      "Cancelled",
+    ]).default("Pending"),
+    createdAt: timestamp("created_at", { mode: "string" })
+      .notNull()
+      .defaultNow(),
+    updatedAt: timestamp("updated_at", { mode: "string" })
+      .notNull()
+      .defaultNow(),
+  },
+  (table) => ({
+    idx_event_ticket: index("idx_event_ticket").on(
+      table.eventId,
+      table.ticketType,
+    ),
+    idx_user: index("idx_user").on(table.userId),
+  }),
+);
 
+/** 💳 Payment Details Table */
+export const paymentDetails = mysqlTable(
+  "payment_details",
+  {
+    id: varchar("id", { length: 50 })
+      .primaryKey()
+      .$defaultFn(() => `pd-${randomUUID()}`),
+    orderId: varchar("order_id", { length: 50 })
+      .notNull()
+      .references(() => orders.id, { onDelete: "cascade" }),
+    transactionId: varchar("transaction_id", { length: 50 }).notNull(),
+    grossAmount: decimal("gross_amount", { precision: 10, scale: 2 }).notNull(),
+    currency: varchar("currency", { length: 10 }).notNull().default("IDR"),
+    paymentType: mysqlEnum("payment_type", [
+      "qris",
+      "gopay",
+      "bank_transfer",
+      "echannel",
+    ]).notNull(),
+    transactionTime: timestamp("transaction_time", {
+      mode: "string",
+    }).notNull(),
+    transactionStatus: varchar("transaction_status", { length: 20 }).notNull(),
+    fraudStatus: varchar("fraud_status", { length: 20 }).notNull(),
+    expiryTime: timestamp("expiry_time", { mode: "string" }).notNull(),
+
+    // QRIS specific fields
+    qrString: varchar("qr_string", { length: 500 }),
+    acquirer: varchar("acquirer", { length: 50 }),
+
+    // Bank Transfer specific fields
+    vaNumbers:
+      json("va_numbers").$type<{ bank: string; va_number: string }[]>(),
+
+    // Mandiri specific fields
+    billKey: varchar("bill_key", { length: 50 }),
+    billerCode: varchar("biller_code", { length: 50 }),
+
+    // Permata specific fields
+    permataVaNumber: varchar("permata_va_number", { length: 50 }),
+
+    // Store all action URLs and methods
+    actions:
+      json("actions").$type<{ name: string; method: string; url: string }[]>(),
+
+    createdAt: timestamp("created_at", { mode: "string" })
+      .notNull()
+      .defaultNow(),
+    updatedAt: timestamp("updated_at", { mode: "string" })
+      .notNull()
+      .defaultNow(),
+  },
+  (table) => ({
+    idx_order: index("idx_order").on(table.orderId),
+    idx_transaction: index("idx_transaction").on(table.transactionId),
+  }),
+);
+
+/** 🔗 Relations */
 export const eventAvailabilityRelations = relations(
   eventAvailability,
   ({ one }) => ({
@@ -83,10 +190,7 @@ export const eventAvailabilityRelations = relations(
 );
 
 export const eventPriceRelations = relations(eventPrice, ({ one }) => ({
-  event: one(events, {
-    fields: [eventPrice.eventId],
-    references: [events.id],
-  }),
+  event: one(events, { fields: [eventPrice.eventId], references: [events.id] }),
 }));
 
 export const eventQuestionsRelations = relations(eventQuestions, ({ one }) => ({
@@ -96,107 +200,33 @@ export const eventQuestionsRelations = relations(eventQuestions, ({ one }) => ({
   }),
 }));
 
-export const eventRelations = relations(events, ({ one, many }) => ({
-  eventAvailability: one(eventAvailability, {
-    fields: [events.id],
-    references: [eventAvailability.eventId],
-  }),
-  eventPrice: one(eventPrice, {
-    fields: [events.id],
-    references: [eventPrice.eventId],
-  }),
-  eventQuestions: many(eventQuestions),
+export const orderRelations = relations(orders, ({ one, many }) => ({
+  user: one(users, { fields: [orders.userId], references: [users.id] }),
+  event: one(events, { fields: [orders.eventId], references: [events.id] }),
+  paymentDetails: many(paymentDetails),
 }));
 
-// Tickets Table
-// export const tickets = mysqlTable("tickets", {
-//   id: varchar("id", { length: 50 })
-//     .primaryKey()
-//     .$defaultFn(() => randomUUID()),
-//   eventId: varchar("event_id", { length: 50 })
-//     .notNull()
-//     .references(() => events.id),
-//   ticketType: varchar("ticket_type", { length: 10 })
-//     .$type<"reguler" | "vip">()
-//     .notNull(),
-//   participantName: varchar("participant_name", { length: 255 }),
-//   participantWhatsapp: varchar("participant_whatsapp", { length: 20 }),
-//   ticketStatus: varchar("ticket_status", { length: 10 })
-//     .$type<"active" | "used" | "expired">()
-//     .notNull(),
-//   createdAt: timestamp("created_at", { mode: "string" }).notNull().defaultNow(),
-//   updatedAt: timestamp("updated_at", { mode: "string" }).notNull().defaultNow(),
-// });
+export const paymentDetailsRelations = relations(paymentDetails, ({ one }) => ({
+  order: one(orders, {
+    fields: [paymentDetails.orderId],
+    references: [orders.id],
+  }),
+}));
 
-// // Orders Table
-// export const orders = mysqlTable("orders", {
-//   id: varchar("id", { length: 50 })
-//     .primaryKey()
-//     .$defaultFn(() => randomUUID()),
-//   userId: varchar("user_id", { length: 50 })
-//     .notNull()
-//     .references(() => users.id),
-//   orderQty: int("order_qty").notNull().default(1),
-//   orderStatus: varchar("order_status", { length: 20 })
-//     .$type<"Pending" | "Completed" | "Cancelled">()
-//     .notNull(),
-//   createdAt: timestamp("created_at", { mode: "string" }).notNull().defaultNow(),
-//   updatedAt: timestamp("updated_at", { mode: "string" }).notNull().defaultNow(),
-// });
+export const userRelations = relations(users, ({ many }) => ({
+  orders: many(orders),
+}));
 
-// // Payments Table
-// export const payments = mysqlTable("payments", {
-//   id: varchar("id", { length: 50 })
-//     .primaryKey()
-//     .$defaultFn(() => randomUUID()),
-//   orderId: varchar("order_id", { length: 50 })
-//     .notNull()
-//     .unique() // Ensure one-to-one relationship with orders
-//     .references(() => orders.id),
-//   paymentMethod: varchar("payment_method", { length: 50 }).notNull(),
-//   paymentCategory: varchar("payment_category", { length: 50 })
-//     .$type<"QR Code" | "E-Wallet" | "Bank Transfer">()
-//     .notNull(),
-//   paymentStatus: varchar("payment_status", { length: 20 })
-//     .$type<"Pending" | "Completed" | "Failed">()
-//     .notNull(),
-//   paymentDate: timestamp("payment_date", { mode: "string" }), // Optional, set when paid
-//   dueDate: timestamp("due_date", { mode: "string" }).notNull(), // New column for payment due date
-//   amount: int("amount").notNull(),
-//   createdAt: timestamp("created_at", { mode: "string" }).notNull().defaultNow(),
-//   updatedAt: timestamp("updated_at", { mode: "string" }).notNull().defaultNow(),
-// });
+export type Order = typeof orders.$inferSelect;
+export type Event = typeof events.$inferSelect;
+export type EventAvailability = typeof eventAvailability.$inferSelect;
+export type EventPrice = typeof eventPrice.$inferSelect;
+export type EventQuestion = typeof eventQuestions.$inferSelect;
+export type PaymentDetail = typeof paymentDetails.$inferSelect;
 
-// // Relationships
-// export const usersRelations = relations(users, ({ many }) => ({
-//   orders: many(orders),
-// }));
-
-// export const eventsRelations = relations(events, ({ many }) => ({
-//   tickets: many(tickets),
-// }));
-
-// export const ticketsRelations = relations(tickets, ({ one }) => ({
-//   event: one(events, {
-//     fields: [tickets.eventId],
-//     references: [events.id],
-//   }),
-// }));
-
-// export const ordersRelations = relations(orders, ({ one }) => ({
-//   user: one(users, {
-//     fields: [orders.userId],
-//     references: [users.id],
-//   }),
-//   payment: one(payments, {
-//     fields: [orders.id],
-//     references: [payments.orderId],
-//   }),
-// }));
-
-// export const paymentsRelations = relations(payments, ({ one }) => ({
-//   order: one(orders, {
-//     fields: [payments.orderId],
-//     references: [orders.id],
-//   }),
-// }));
+export type OrderInsert = typeof orders.$inferInsert;
+export type EventInsert = typeof events.$inferInsert;
+export type EventAvailabilityInsert = typeof eventAvailability.$inferInsert;
+export type EventPriceInsert = typeof eventPrice.$inferInsert;
+export type EventQuestionInsert = typeof eventQuestions.$inferInsert;
+export type PaymentDetailInsert = typeof paymentDetails.$inferInsert;

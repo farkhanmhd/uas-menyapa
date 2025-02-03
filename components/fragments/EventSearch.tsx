@@ -21,6 +21,7 @@ export default function EventSearch() {
   const handleSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
     setSearchParams({
       search: e.target.value,
+      page: 1,
     });
   };
 

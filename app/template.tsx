@@ -11,7 +11,9 @@ const Template = async ({ children }: { children: React.ReactNode }) => {
   return (
     <ScrollArea className="relative h-dvh" type="scroll">
       <Navigation user={user} />
-      <main className="mt-[82px] sm:px-4">{children}</main>
+      <main className="mt-[82px] flex min-h-[calc(100dvh-82px)] flex-col sm:px-4">
+        {children}
+      </main>
       <Footer />
     </ScrollArea>
   );

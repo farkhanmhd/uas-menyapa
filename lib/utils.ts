@@ -31,3 +31,42 @@ export const formatToIDR = (number: number) => {
     minimumFractionDigits: 0,
   }).format(number);
 };
+
+export const calculateTotal = (subtotal: number, paymentMethod: string) => {
+  let serviceFee = 0;
+  let vat = 0;
+
+  if (paymentMethod === "qris") {
+    serviceFee = Math.floor(subtotal * 0.007);
+  } else if (paymentMethod === "gopay") {
+    serviceFee = 3000;
+  } else {
+    serviceFee = 4000;
+    vat = serviceFee * 0.11;
+  }
+
+  const total = subtotal + serviceFee + vat;
+
+  return { total, serviceFee, vat };
+};
+
+export function formatDateOrder(dateString: string): string {
+  const date = new Date(dateString);
+  return date.toLocaleString("en-US", {
+    weekday: "short",
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+    hour: "numeric",
+    minute: "numeric",
+  });
+}
+
+export function formatCurrency(amount: string, currency: string): string {
+  const numericAmount = Number.parseFloat(amount);
+  return new Intl.NumberFormat("id-ID", {
+    style: "currency",
+    currency: currency,
+    minimumFractionDigits: 0,
+  }).format(numericAmount);
+}

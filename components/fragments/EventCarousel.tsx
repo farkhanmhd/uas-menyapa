@@ -8,13 +8,10 @@ import { getEvents } from "@/app/lib/events";
 import type { IEventCard } from "@/types";
 
 export default async function EventCarousel() {
-  const {
-    events,
-    // total,
-    // limit,
-  }: { events: IEventCard[]; total: number; limit: number } = await getEvents({
-    search: "",
-  });
+  const { events }: { events: IEventCard[]; total: number; limit: number } =
+    await getEvents({
+      search: "",
+    });
 
   return (
     <div className="mb-12 px-4 2xl:px-0">
