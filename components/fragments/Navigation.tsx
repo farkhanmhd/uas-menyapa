@@ -38,7 +38,7 @@ export default function Navigation({ user }: { user: User | null }) {
   };
 
   return (
-    <nav className="fixed left-0 right-0 top-0 z-50 bg-background/60 shadow-sm backdrop-blur-md">
+    <nav className="fixed left-0 right-0 top-0 z-50 bg-background/95 shadow-sm backdrop-blur-lg">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between py-4">
           <Link
@@ -58,19 +58,19 @@ export default function Navigation({ user }: { user: User | null }) {
               href="/events"
               className="text-sm text-foreground hover:text-primary"
             >
-              Events
+              Acara
             </Link>
             <Link
               href="/about"
               className="text-sm text-foreground hover:text-primary"
             >
-              About
+              Tentang
             </Link>
             <Link
               href="/contact"
               className="text-sm text-foreground hover:text-primary"
             >
-              Contact
+              Kontak
             </Link>
             <ThemeSwitch />
             {user ? (
@@ -94,7 +94,14 @@ export default function Navigation({ user }: { user: User | null }) {
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end">
                     <DropdownMenuItem className="cursor-pointer">
-                      <Link href="/orders">Riwayat Transaksi</Link>
+                      <Link href="/account" className="h-full w-full">
+                        Akun
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem className="cursor-pointer">
+                      <Link href="/orders" className="h-full w-full">
+                        Riwayat Transaksi
+                      </Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem className="cursor-pointer p-0">
                       <AlertDialogTrigger asChild>
@@ -151,19 +158,25 @@ export default function Navigation({ user }: { user: User | null }) {
                   href="/events"
                   className="text-sm text-foreground hover:text-primary"
                 >
-                  Events
+                  Acara
                 </Link>
                 <Link
                   href="/about"
                   className="text-sm text-foreground hover:text-primary"
                 >
-                  About
+                  Tentang
                 </Link>
                 <Link
                   href="/contact"
                   className="text-sm text-foreground hover:text-primary"
                 >
-                  Contact
+                  Kontak
+                </Link>
+                <Link
+                  href="/orders"
+                  className="text-sm text-foreground hover:text-primary"
+                >
+                  Riwayat Transaksi
                 </Link>
                 <span className="flex items-center justify-between text-sm text-foreground hover:text-primary">
                   Theme

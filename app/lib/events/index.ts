@@ -1,10 +1,9 @@
-export const getEvents = async (searchParams: {
-  search?: string;
-  start?: string;
-  end?: string;
-  page?: number;
-  limit?: number;
-}) => {
+import { EventSearchParams } from "@/app/api/events/searchParams";
+import { EventList, IEvent, IEventCard } from "@/types";
+
+export const getEvents = async (
+  searchParams: EventSearchParams,
+): Promise<EventList> => {
   try {
     const queryParams = new URLSearchParams();
 
@@ -35,7 +34,7 @@ export const getEvents = async (searchParams: {
   }
 };
 
-export const getEventById = async (id: string) => {
+export const getEventById = async (id: string): Promise<{ event: IEvent }> => {
   try {
     const res = await fetch(`${process.env.BASE_URL}/api/events/${id}`, {
       cache: "force-cache",
@@ -53,7 +52,9 @@ export const getEventById = async (id: string) => {
   }
 };
 
-export const getRecommendations = async (id: string) => {
+export const getRecommendations = async (
+  id: string,
+): Promise<{ events: IEventCard[] }> => {
   try {
     const res = await fetch(
       `${process.env.BASE_URL}/api/events/${id}/recommendations`,

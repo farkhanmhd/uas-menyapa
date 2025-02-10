@@ -7,15 +7,14 @@ import {
   varchar,
 } from "drizzle-orm/mysql-core";
 import type { AdapterAccountType } from "next-auth/adapters";
-import { randomUUID } from "crypto";
 
 export const users = mysqlTable("user", {
   id: varchar("id", { length: 50 })
     .primaryKey()
-    .$defaultFn(() => `user-${randomUUID()}`),
+    .$defaultFn(() => crypto.randomUUID()),
   name: varchar("name", { length: 255 }),
   email: varchar("email", { length: 255 }).unique(),
-  age: int("age"),
+  dateOfBirth: timestamp("date_of_birth", { mode: "date" }),
   gender: varchar("gender", { length: 6 }).$type<"male" | "female">(),
   address: varchar("address", { length: 255 }),
   marriageStatus: varchar("marriage_status", { length: 9 }).$type<
@@ -35,6 +34,7 @@ export const users = mysqlTable("user", {
 });
 
 export type SelectUser = typeof users.$inferSelect;
+export type InsertUser = typeof users.$inferInsert;
 
 export const accounts = mysqlTable(
   "account",

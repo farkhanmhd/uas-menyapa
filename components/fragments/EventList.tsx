@@ -1,30 +1,17 @@
 import { MapItems } from "@/lib/utils";
 import { EventCard } from "./EventCard";
 import { getEvents } from "@/app/lib/events";
-import type { IEventCard } from "@/types";
+import type { EventList } from "@/types";
 import { PageNavigation } from "./Pagination";
 import { NoEvents } from "./NoEvents";
+import { EventSearchParams } from "@/app/api/events/searchParams";
 
 type EventListProps = {
-  searchParams: {
-    search?: string;
-    start?: string;
-    end?: string;
-    page?: number;
-    limit?: number;
-  };
+  searchParams: EventSearchParams;
 };
 
 export async function EventList({ searchParams }: EventListProps) {
-  const {
-    events,
-  }: {
-    events: IEventCard[];
-    total: number;
-    limit: number;
-    totalPages: number;
-    currentPage: number;
-  } = await getEvents(searchParams);
+  const { events }: EventList = await getEvents(searchParams);
 
   return (
     <div className="flex flex-1 flex-col space-y-8 pb-8">

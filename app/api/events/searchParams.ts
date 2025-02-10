@@ -9,6 +9,14 @@ import { formatDate } from "date-fns";
 
 const currentYear = new Date().getFullYear();
 
+export type EventSearchParams = {
+  limit?: number;
+  page?: number;
+  search?: string;
+  start?: string;
+  end?: string;
+};
+
 export const eventSearchParams = {
   limit: parseAsInteger.withDefault(12),
   page: parseAsInteger.withDefault(1),

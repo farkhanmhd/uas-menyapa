@@ -2,36 +2,17 @@
 
 import { actionClient } from "../../safe-action";
 import { orderSchema } from "@/types";
-import { headers } from "next/headers";
+import { createOrder } from "../../services/orders";
 
 export const createOrderAction = actionClient
   .schema(orderSchema)
-  .action(async ({ parsedInput: data }) => {
+  .action(async ({ parsedInput: bodyData }) => {
     try {
-      const headersList = await headers();
-      const response = await fetch(`${process.env.BASE_URL}/api/orders`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          cookie: headersList.get("cookie") ?? "",
-        },
-        body: JSON.stringify(data),
-      });
+      const { status, data, message } = await createOrder(bodyData);
 
-      const responseData = await response.json();
-
-      if (!response.ok) {
-        return {
-          message: responseData.message,
-        };
-      }
-
-      return {
-        status: response.status,
-        data: responseData.data,
-        message: "Order created successfully!",
-      };
+      return { status, data, message };
     } catch (error) {
+      console.log(error);
       return {
         message:
           error instanceof Error ? error.message : "Something went wrong",

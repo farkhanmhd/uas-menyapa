@@ -1,17 +1,74 @@
 "use client";
 
-import React from "react";
 import Image from "next/image";
 import { EventTime } from "@/components/fragments/EventTime";
 import type { IEvent } from "@/types";
 import Link from "next/link";
 import { Card, CardContent } from "@/components/ui/card";
-import { CalendarIcon, MapPinIcon, ShareIcon, MapIcon } from "lucide-react";
+import {
+  CalendarIcon,
+  MapPinIcon,
+  ShareIcon,
+  MapIcon,
+  Clock,
+  CheckCircle,
+} from "lucide-react";
 import { Button, buttonVariants } from "@/components/ui/button";
 import CheckoutSection from "./checkout-section";
 import EventFAQ from "./event-faq";
 
 export function EventDetail({ ...props }: IEvent) {
+  const now = new Date();
+  const eventStart = new Date(props.startTime);
+  const eventEnd = new Date(props.endTime);
+
+  const eventStatus =
+    now < eventStart
+      ? "upcoming"
+      : now >= eventStart && now <= eventEnd
+        ? "ongoing"
+        : "ended";
+
+  const EventStatusUI = () => {
+    switch (eventStatus) {
+      case "ongoing":
+        return (
+          <Card className="bg-green-100">
+            <CardContent className="p-6">
+              <div className="flex items-center space-x-2">
+                <Clock className="h-5 w-5 text-green-600" />
+                <h2 className="text-lg font-semibold text-green-700">
+                  Event In Progress
+                </h2>
+              </div>
+              <p className="mt-2 text-green-600">
+                This event is currently ongoing. Ticket sales are no longer
+                available.
+              </p>
+            </CardContent>
+          </Card>
+        );
+      case "ended":
+        return (
+          <Card className="bg-gray-100">
+            <CardContent className="p-6">
+              <div className="flex items-center space-x-2">
+                <CheckCircle className="h-5 w-5 text-gray-600" />
+                <h2 className="text-lg font-semibold text-gray-700">
+                  Event Has Ended
+                </h2>
+              </div>
+              <p className="mt-2 text-gray-600">
+                This event has concluded. Thank you for your interest.
+              </p>
+            </CardContent>
+          </Card>
+        );
+      default:
+        return null;
+    }
+  };
+
   return (
     <div className="relative grid gap-8 pt-8 lg:grid-cols-12">
       <div className="top-[112px] col-auto md:col-span-5 lg:sticky lg:col-span-3 lg:self-start">
@@ -70,26 +127,32 @@ export function EventDetail({ ...props }: IEvent) {
             <p className="text-sm text-muted-foreground md:text-base">
               {props.description}
             </p>
-            {props.vipAvailability + props.regulerAvailability <= 10 && (
-              <div className="space-y-4">
-                <h2 className="text-lg font-semibold">Ketersediaan Tiket</h2>
-                <p className={buttonVariants({ variant: "destructive" })}>
-                  Hanya tersisa{" "}
-                  {props.vipAvailability + props.regulerAvailability} tiket!
-                </p>
-              </div>
-            )}
+            {eventStatus === "upcoming" &&
+              props.vipAvailability + props.regulerAvailability <= 10 &&
+              props.vipAvailability + props.regulerAvailability >= 1 && (
+                <div className="space-y-4">
+                  <h2 className="text-lg font-semibold">Ketersediaan Tiket</h2>
+                  <p className={buttonVariants({ variant: "destructive" })}>
+                    Hanya tersisa{" "}
+                    {props.vipAvailability + props.regulerAvailability} tiket!
+                  </p>
+                </div>
+              )}
           </CardContent>
         </Card>
         <EventFAQ questions={props.questions} answers={props.answers} />
       </div>
       <div className="fixed bottom-0 left-0 right-0 z-50 md:col-span-4 lg:sticky lg:top-[112px] lg:z-0 lg:self-start xl:col-span-3">
-        <CheckoutSection
-          vipAvailability={props.vipAvailability}
-          vipPrice={props.vipPrice}
-          regulerAvailability={props.regulerAvailability}
-          regulerPrice={props.regulerPrice}
-        />
+        {eventStatus === "upcoming" ? (
+          <CheckoutSection
+            vipAvailability={props.vipAvailability}
+            vipPrice={props.vipPrice}
+            regulerAvailability={props.regulerAvailability}
+            regulerPrice={props.regulerPrice}
+          />
+        ) : (
+          <EventStatusUI />
+        )}
       </div>
     </div>
   );

@@ -28,7 +28,7 @@ export const POST = async (req: NextRequest) => {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const userId = session?.user.id;
+    const userId = session.user.id;
 
     const body = await req.json();
     const validation = orderSchema.safeParse(body);
@@ -88,6 +88,7 @@ export const POST = async (req: NextRequest) => {
         tx
           .select({
             title: events.title,
+            startTime: events.startTime,
           })
           .from(events)
           .where(eq(events.id, data.eventId)),
@@ -103,6 +104,12 @@ export const POST = async (req: NextRequest) => {
 
       const stock = stockRow[0];
       const event = eventDetails[0];
+
+      // Check if event has already started
+      if (new Date(event.startTime) < new Date()) {
+        throw new Error("Event has already started");
+      }
+
       const availableStock =
         data.variant === "reguler"
           ? stock.regulerAvailability
@@ -214,8 +221,6 @@ export const POST = async (req: NextRequest) => {
         });
       }
 
-      console.log(orderDetails);
-
       // Process order inside transaction
       const paymentResponse = await core.charge(JSON.stringify(orderDetails));
 
@@ -276,18 +281,15 @@ export const POST = async (req: NextRequest) => {
       return paymentResponse;
     });
 
-    console.log("✅ Order created successfully!");
-
-    console.log(transaction);
-
     return NextResponse.json(
       { data: transaction },
       { status: transaction.status_code },
     );
   } catch (error) {
-    console.error("❌ Order API Error:", error);
     return NextResponse.json(
-      { error: "Failed to create order" },
+      {
+        error: error instanceof Error ? error.message : "Something went wrong",
+      },
       { status: 500 },
     );
   }

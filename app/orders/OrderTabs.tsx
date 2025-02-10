@@ -5,6 +5,27 @@ import { useQueryStates } from "nuqs";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ordersSearchParams, OrderStatus } from "../api/events/searchParams";
+import { MapItems } from "@/lib/utils";
+import { SelectOption } from "@/types";
+
+const tabTriggers: SelectOption[] = [
+  {
+    label: "Pending",
+    value: "pending",
+  },
+  {
+    label: "Active",
+    value: "active",
+  },
+  {
+    label: "Cancelled",
+    value: "cancelled",
+  },
+  {
+    label: "Expired",
+    value: "expired",
+  },
+];
 
 export default function OrderTabs({ children }: { children: React.ReactNode }) {
   const [{ status }, setSearchParams] = useQueryStates(ordersSearchParams);
@@ -18,10 +39,14 @@ export default function OrderTabs({ children }: { children: React.ReactNode }) {
     >
       <ScrollArea>
         <TabsList className="mb-3">
-          <TabsTrigger value="active">Active</TabsTrigger>
-          <TabsTrigger value="pending">Pending</TabsTrigger>
-          <TabsTrigger value="expired">Expired</TabsTrigger>
-          <TabsTrigger value="cancelled">Cancelled</TabsTrigger>
+          <MapItems
+            of={tabTriggers}
+            render={(trigger, index) => (
+              <TabsTrigger key={index} value={trigger.value}>
+                {trigger.label}
+              </TabsTrigger>
+            )}
+          />
         </TabsList>
         <ScrollBar orientation="horizontal" />
       </ScrollArea>

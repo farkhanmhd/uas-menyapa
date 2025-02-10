@@ -8,12 +8,14 @@ import type { SearchParams } from "nuqs/server";
 import { loadEventSearchParams } from "../api/events/searchParams";
 import EventListSkeleton from "@/components/fragments/EventListSkeleton";
 import { Skeleton } from "@/components/ui/skeleton";
+import { checkSession } from "../lib";
 
 type PageProps = {
   searchParams: Promise<SearchParams>;
 };
 
 export default async function EventsPage({ searchParams }: PageProps) {
+  await checkSession();
   const { start, end, search, page, limit } =
     await loadEventSearchParams(searchParams);
 

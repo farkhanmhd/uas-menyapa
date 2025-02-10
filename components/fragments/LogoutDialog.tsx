@@ -31,7 +31,10 @@ export default function LogOutDialog({
           <AlertDialogCancel asChild>
             <Button variant="secondary">Cancel</Button>
           </AlertDialogCancel>
-          <AlertDialogAction asChild onClick={() => signOut()}>
+          <AlertDialogAction
+            asChild
+            onClick={() => signOut({ callbackUrl: "/" })}
+          >
             <Button variant="destructive">Logout</Button>
           </AlertDialogAction>
         </AlertDialogFooter>

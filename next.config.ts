@@ -16,6 +16,11 @@ const nextConfig: NextConfig = {
         port: "",
         pathname: "/a/**",
       },
+      {
+        protocol: "https",
+        hostname: "api.sandbox.midtrans.com",
+        pathname: "/v2/**",
+      },
     ],
   },
 };

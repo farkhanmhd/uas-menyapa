@@ -168,3 +168,39 @@ export const orderSchema = z.object({
   variant: z.enum(["reguler", "vip"]),
   paymentMethod: z.string(),
 });
+
+export interface OrderResponse {
+  data: OrderResponseData;
+}
+
+export interface OrderResponseData {
+  status_code: string;
+  status_message: string;
+  transaction_id: string;
+  order_id: string;
+  merchant_id: string;
+  gross_amount: string;
+  currency: string;
+  payment_type: string;
+  transaction_time: Date;
+  transaction_status: string;
+  fraud_status: string;
+  actions: OrderAction[];
+  acquirer: string;
+  qr_string: string;
+  expiry_time: Date;
+}
+
+export interface OrderAction {
+  name: string;
+  method: string;
+  url: string;
+}
+
+export interface EventList {
+  events: IEventCard[];
+  total: number;
+  limit: number;
+  totalPages: number;
+  currentPage: number;
+}
