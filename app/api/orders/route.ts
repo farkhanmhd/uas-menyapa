@@ -47,7 +47,7 @@ export const POST = async (req: NextRequest) => {
       .select({
         name: users.name,
         email: users.email,
-        phone: users.whatsapp,
+        whatsapp: users.whatsapp,
       })
       .from(users)
       .where(eq(users.id, userId));
@@ -57,6 +57,13 @@ export const POST = async (req: NextRequest) => {
     }
 
     const customer = user[0];
+
+    if (!customer.whatsapp) {
+      return NextResponse.json(
+        { error: "User has no whatsapp number" },
+        { status: 400 },
+      );
+    }
 
     // Initialize Midtrans client outside transaction
     const core = new midtransClient.CoreApi({
@@ -150,7 +157,7 @@ export const POST = async (req: NextRequest) => {
         customer_details: {
           first_name: customer.name as string,
           email: customer.email as string,
-          phone: customer.phone as string,
+          phone: customer.whatsapp as string,
         },
         item_details: [
           {

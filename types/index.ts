@@ -204,3 +204,38 @@ export interface EventList {
   totalPages: number;
   currentPage: number;
 }
+
+export interface PurchasedEvent {
+  eventId: string;
+  title: string;
+  posterUrl: string;
+  venue: string;
+  city: string;
+  startTime: Date;
+  endTime: Date;
+  totalQty: string;
+}
+
+export interface Ticket {
+  id: string;
+  orderId: string;
+  eventId: string;
+  eventTitle: string;
+  participantName: string | null;
+  whatsappNumber: string | null;
+  ticketType: TicketVariant;
+  startTime: Date;
+  endTime: Date;
+  eventLocation: string;
+  ticketDesign: string;
+  certificateId: string;
+  presence: string;
+}
+
+export interface CertificateData {
+  id: string;
+  name: string;
+  eventTitle: string;
+  certificateImage: string;
+  createdAt: string;
+}

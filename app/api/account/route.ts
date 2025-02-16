@@ -3,6 +3,7 @@ import db from "@/db";
 import { users } from "@/db/schema/authentication";
 import { eq } from "drizzle-orm";
 import { NextResponse } from "next/server";
+import { parseISO } from "date-fns";
 
 export const GET = async () => {
   try {
@@ -54,18 +55,21 @@ export const PUT = async (req: Request) => {
     const { whatsapp, name, dateOfBirth, address, gender, marriageStatus } =
       payload;
 
-    // transaction
-    await db
-      .update(users)
-      .set({
-        whatsapp,
-        name,
-        dateOfBirth,
-        address,
-        gender,
-        marriageStatus,
-      })
-      .where(eq(users.id, userId));
+    const updateData: Record<string, any> = {};
+
+    if (whatsapp !== undefined) updateData.whatsapp = `+62${whatsapp}`;
+    if (name !== undefined) updateData.name = name;
+    if (dateOfBirth !== undefined)
+      updateData.dateOfBirth = parseISO(dateOfBirth);
+    if (address !== undefined) updateData.address = address;
+    if (gender !== undefined) updateData.gender = gender;
+    if (marriageStatus !== undefined)
+      updateData.marriageStatus = marriageStatus;
+
+    // Check if there's anything to update
+    if (Object.keys(updateData).length > 0) {
+      await db.update(users).set(updateData).where(eq(users.id, userId));
+    }
 
     return NextResponse.json({ message: "Account updated successfully" });
   } catch (error) {

@@ -15,14 +15,12 @@ import {
 } from "@/components/ui/alert-dialog";
 import { loginAction } from "@/app/lib/auth";
 
-export function GoogleLoginDialog({ label = "Login" }: { label?: string }) {
+export function GoogleLoginDialog({ children }: { children: React.ReactNode }) {
   const [, submitAction, isPending] = useActionState(loginAction, null);
   return (
     <AlertDialog>
-      <AlertDialogTrigger asChild>
-        {label && <Button className="w-full">{label}</Button>}
-      </AlertDialogTrigger>
-      <AlertDialogContent className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 sm:max-w-[425px]">
+      <AlertDialogTrigger asChild>{children}</AlertDialogTrigger>
+      <AlertDialogContent className="absolute left-1/2 top-1/2 z-[100] w-10/12 -translate-x-1/2 -translate-y-1/2 rounded-xl sm:max-w-[425px]">
         <AlertDialogHeader>
           <AlertDialogTitle>Login to UAS Menyapa</AlertDialogTitle>
           <AlertDialogDescription>

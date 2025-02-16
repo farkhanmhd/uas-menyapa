@@ -15,7 +15,7 @@ export default async function EventCarousel() {
 
   return (
     <div className="mb-12 px-4 2xl:px-0">
-      <h2 className="mb-6 text-3xl font-bold">Upcoming Events</h2>
+      <h2 className="mb-6 text-3xl font-bold">Events</h2>
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         <MapItems
           of={events}

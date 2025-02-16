@@ -1,10 +1,12 @@
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { cn } from "@/lib/utils";
 
 type Props = {
   label: string;
   id: string;
   value: string;
+  className?: string;
   onChange: (value: string) => void;
 };
 
@@ -26,7 +28,10 @@ export default function PhoneInput(props: Props) {
       <div className="relative">
         <Input
           id={props.id}
-          className="peer ml-1 ps-9 [direction:inherit] placeholder:text-sm"
+          className={cn(
+            "placeholder:text-sms peer ps-10 text-sm [direction:inherit]",
+            props.className,
+          )}
           placeholder="81234567890"
           inputMode="numeric"
           value={props.value}

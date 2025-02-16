@@ -4,15 +4,19 @@ import { OrderCard } from "@/types";
 import { PaymentData } from "@/utils/paymentUtils";
 import db from "@/db";
 import { paymentDetails, orders } from "@/db/schema/public";
+import { headers } from "next/headers";
 
 export const getOrdersByStatus = async (
   status: OrderStatus,
 ): Promise<OrderCard[]> => {
   try {
+    const headerList = await headers();
+    const cookie = headerList.get("cookie");
     const res = await fetch(
       `${process.env.BASE_URL}/api/orders?status=${status}`,
       {
         cache: "force-cache",
+        headers: { cookie: cookie ?? "" },
       },
     );
     const { data } = await res.json();
@@ -25,7 +29,11 @@ export const getOrdersByStatus = async (
 
 export async function getPaymentData(id: string): Promise<PaymentData> {
   try {
-    const response = await fetch(`${process.env.BASE_URL}/api/orders/${id}`);
+    const headerList = await headers();
+    const cookie = headerList.get("cookie");
+    const response = await fetch(`${process.env.BASE_URL}/api/orders/${id}`, {
+      headers: { cookie: cookie ?? "" },
+    });
 
     if (!response.ok) {
       throw new Error("Failed to fetch payment data");

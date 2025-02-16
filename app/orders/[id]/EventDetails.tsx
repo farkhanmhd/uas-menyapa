@@ -1,4 +1,5 @@
-import { MapPin, Calendar, Clock } from "lucide-react";
+import { MapPin, Calendar } from "lucide-react";
+import { EventTime } from "@/components/fragments/EventTime";
 
 interface EventDetailsProps {
   title: string;
@@ -25,12 +26,10 @@ export function EventDetails({
         </p>
         <p className="flex items-center text-muted-foreground">
           <Calendar className="mr-2 h-4 w-4" />
-          {new Date(startTime).toLocaleDateString()}
-        </p>
-        <p className="flex items-center text-muted-foreground">
-          <Clock className="mr-2 h-4 w-4" />
-          {new Date(startTime).toLocaleTimeString()} -{" "}
-          {new Date(endTime).toLocaleTimeString()}
+          <EventTime
+            startTime={new Date(startTime)}
+            endTime={new Date(endTime)}
+          />
         </p>
       </div>
     </div>

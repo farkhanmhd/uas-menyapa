@@ -1,0 +1,1 @@
+ALTER TABLE `events` ADD `whatsapp_group_url` varchar(255);

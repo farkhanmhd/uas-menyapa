@@ -14,7 +14,7 @@ export function CardCarousel({ ...event }: IEventCard) {
   return (
     <Card
       key={event.id}
-      className="flex h-full max-h-[520px] w-[200px] cursor-pointer flex-col justify-between overflow-hidden sm:max-h-full sm:w-full"
+      className="flex h-full max-h-[520px] w-[200px] cursor-pointer flex-col justify-between overflow-hidden duration-200 hover:bg-muted sm:max-h-full sm:w-full"
       onClick={() => push(`/events/${event.id}`)}
     >
       <CardContent className="p-0">

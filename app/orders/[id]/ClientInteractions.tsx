@@ -1,10 +1,11 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
+import { Link } from "next-view-transitions";
 import { Button } from "@/components/ui/button";
 import { CountdownTimer } from "./CountdownTimer";
-import { ClipboardCopy, Ticket, PhoneIcon as WhatsApp } from "lucide-react";
+import { ClipboardCopy, Ticket } from "lucide-react";
+import { PiWhatsappLogo } from "react-icons/pi";
 import { toast } from "@/hooks/use-toast";
 
 interface ClientInteractionsProps {
@@ -14,6 +15,8 @@ interface ClientInteractionsProps {
   isPaid: boolean;
   expiryTime: string;
   actions: any;
+  eventId: string;
+  whatsapp: string;
 }
 
 export function ClientInteractions({
@@ -23,6 +26,8 @@ export function ClientInteractions({
   isPaid,
   expiryTime,
   actions,
+  eventId,
+  whatsapp,
 }: ClientInteractionsProps) {
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text);
@@ -41,11 +46,11 @@ export function ClientInteractions({
                 {paymentDetails.bank} Virtual Account Number
               </p>
               <div className="flex items-center gap-2">
-                <code className="flex-1 rounded bg-background px-3 py-2 text-base font-medium">
+                <code className="flex-1 rounded bg-muted px-3 py-2 text-base font-medium">
                   {paymentDetails.number}
                 </code>
                 <Button
-                  size="sm"
+                  className="h-10"
                   variant="outline"
                   onClick={() => copyToClipboard(paymentDetails.number)}
                 >
@@ -66,7 +71,7 @@ export function ClientInteractions({
                   {paymentDetails.billKey}
                 </code>
                 <Button
-                  size="sm"
+                  className="h-10"
                   variant="outline"
                   onClick={() => copyToClipboard(paymentDetails.billKey!)}
                 >
@@ -77,11 +82,11 @@ export function ClientInteractions({
             <div className="space-y-2">
               <p className="text-sm text-muted-foreground">Biller Code</p>
               <div className="flex items-center gap-2">
-                <code className="flex-1 rounded bg-background px-3 py-2 text-base font-medium">
+                <code className="flex-1 rounded bg-muted px-3 py-2 text-base font-medium">
                   {paymentDetails.billerCode}
                 </code>
                 <Button
-                  size="sm"
+                  className="h-10"
                   variant="outline"
                   onClick={() => copyToClipboard(paymentDetails.billerCode!)}
                 >
@@ -141,16 +146,13 @@ export function ClientInteractions({
 
       {isPaid && (
         <div className="flex flex-col gap-3">
-          <Link
-            href="https://chat.whatsapp.com/your-group-invite"
-            target="_blank"
-          >
+          <Link href={whatsapp} target="_blank">
             <Button className="w-full">
-              <WhatsApp className="mr-2 h-4 w-4" />
+              <PiWhatsappLogo className="mr-2 h-4 w-4" />
               Join WhatsApp Group
             </Button>
           </Link>
-          <Link href="/tickets">
+          <Link href={`/tickets/${eventId}`}>
             <Button variant="outline" className="w-full">
               <Ticket className="mr-2 h-4 w-4" />
               View Purchased Tickets

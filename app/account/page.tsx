@@ -7,7 +7,7 @@ const AccountPage = async () => {
   await checkSession();
 
   return (
-    <div className="container mx-auto max-w-xl py-10">
+    <div className="container mx-auto max-w-xl">
       <Suspense fallback={<AccountFormSkeleton />}>
         <AsyncAccountForm />
       </Suspense>

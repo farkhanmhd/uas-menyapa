@@ -15,12 +15,13 @@ const seedEvents = async () => {
   console.log("🚀 Starting seeding...");
 
   await db.transaction(async (tx) => {
-    //1️⃣ Insert Events
+    // 1️⃣ Insert Events
     const eventData: EventInsert[] = [
       {
         title:
           "Gelisah Ketika Rezeki Tertunda, Saat Jodoh Sedang di Uji (Sesi 1)",
         posterUrl: "/images/event-1.jpeg",
+        ticketDesignUrl: "/images/ticket.jpg",
         description:
           "Gelisah Ketika Rezeki Tertunda, Saat Jodoh Sedang di Uji (Sesi 1)",
         venue: "Grand Ballroom JW Marriott Hotel",
@@ -28,11 +29,14 @@ const seedEvents = async () => {
         startTime: "2025-05-31T08:00:00",
         endTime: "2025-05-31T10:00:00",
         gmapUrl: "https://www.google.com",
+        whatsappGroupUrl: "https://www.youtube.com/watch?v=xvFZjo5PgG0",
+        certificateDesignUrl: "/images/certificate.jpg",
       },
       {
         title:
           "Gelisah Ketika Rezeki Tertunda, Saat Jodoh Sedang di Uji (Sesi 2)",
         posterUrl: "/images/event-2.jpeg",
+        ticketDesignUrl: "/images/ticket.jpg",
         description:
           "Gelisah Ketika Rezeki Tertunda, Saat Jodoh Sedang di Uji (Sesi 2)",
         venue: "Grand Ballroom JW Marriott Hotel",
@@ -40,6 +44,8 @@ const seedEvents = async () => {
         startTime: "2025-05-31T13:00:00",
         endTime: "2025-05-31T16:00:00",
         gmapUrl: "https://www.google.com",
+        whatsappGroupUrl: "https://www.youtube.com/watch?v=xvFZjo5PgG0",
+        certificateDesignUrl: "/images/certificate.jpg",
       },
     ];
 
@@ -62,28 +68,30 @@ const seedEvents = async () => {
     //     title:
     //       "Gelisah Ketika Rezeki Tertunda, Saat Jodoh Sedang di Uji (Sesi 1)",
     //     posterUrl: "/images/event-1.jpeg",
+    //     ticketDesignUrl: "/images/ticket.jpg",
     //     description:
     //       "Gelisah Ketika Rezeki Tertunda, Saat Jodoh Sedang di Uji (Sesi 1)",
     //     venue: "Grand Ballroom JW Marriott Hotel",
     //     city: "Medan",
     //     startTime: formatToMySQLDatetime(
-    //       new Date(now.getTime() + 5 * 60 * 1000),
+    //       new Date(now.getTime() + 2 * 60 * 1000),
     //     ), // Current time in proper MySQL format
-    //     endTime: formatToMySQLDatetime(
-    //       new Date(now.getTime() + 10 * 60 * 1000),
-    //     ), // 5 minutes later in MySQL format
+    //     endTime: formatToMySQLDatetime(new Date(now.getTime() + 4 * 60 * 1000)), // 2 minutes later in MySQL format
     //     gmapUrl: "https://www.google.com",
     //   },
     //   {
     //     title:
     //       "Gelisah Ketika Rezeki Tertunda, Saat Jodoh Sedang di Uji (Sesi 2)",
     //     posterUrl: "/images/event-2.jpeg",
+    //     ticketDesignUrl: "/images/ticket.jpg",
     //     description:
     //       "Gelisah Ketika Rezeki Tertunda, Saat Jodoh Sedang di Uji (Sesi 2)",
     //     venue: "Grand Ballroom JW Marriott Hotel",
     //     city: "Medan",
-    //     startTime: formatToMySQLDatetime(now), // Current time in proper MySQL format
-    //     endTime: formatToMySQLDatetime(new Date(now.getTime() + 2 * 60 * 1000)), // 5 minutes later in MySQL format
+    //     startTime: formatToMySQLDatetime(
+    //       new Date(now.getTime() + 2 * 60 * 1000),
+    //     ), // Current time in proper MySQL format
+    //     endTime: formatToMySQLDatetime(new Date(now.getTime() + 4 * 60 * 1000)), // 2 minutes later in MySQL format
     //     gmapUrl: "https://www.google.com",
     //   },
     // ];

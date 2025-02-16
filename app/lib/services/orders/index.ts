@@ -1,11 +1,16 @@
 import { OrderData } from "@/types";
+import { headers } from "next/headers";
 
 export const createOrder = async (data: OrderData) => {
   try {
-    console.log(JSON.stringify);
+    const headersList = await headers();
+    const cookie = headersList.get("cookie");
     const response = await fetch(`${process.env.BASE_URL}/api/orders`, {
       method: "POST",
       body: JSON.stringify(data),
+      headers: {
+        cookie: cookie ?? "",
+      },
     });
 
     const responseData = await response.json();

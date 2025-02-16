@@ -42,3 +42,16 @@ export const ordersSearchParams = {
 };
 
 export const loadOrdersSearchParams = createLoader(ordersSearchParams);
+
+const purchasedEventsStatusValues = ["active", "expired"] as const;
+export type PurchasedStatus = (typeof purchasedEventsStatusValues)[number];
+
+export const purchasedEventsSearchParams = {
+  status: parseAsStringLiteral(purchasedEventsStatusValues).withDefault(
+    "active",
+  ),
+};
+
+export const loadPurchasedEventsSearchParams = createLoader(
+  purchasedEventsSearchParams,
+);

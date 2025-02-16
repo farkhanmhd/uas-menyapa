@@ -20,8 +20,8 @@ export function PaymentStatusBanner({
   return (
     <div
       className={cn(
-        "flex items-center justify-between rounded-lg p-4",
-        isPaid ? "bg-green-100" : "bg-red-100",
+        "flex items-center justify-between rounded-lg border p-4",
+        isPaid ? "border-green-500" : "border-destructive",
       )}
     >
       <div className="flex items-center space-x-2">
@@ -35,12 +35,7 @@ export function PaymentStatusBanner({
         </span>
       </div>
       {!isPaid && !isExpired && (
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={onRefresh}
-          className="bg-red-200 hover:bg-red-300"
-        >
+        <Button variant="outline" size="sm" onClick={onRefresh}>
           <RefreshCw className="mr-2 h-4 w-4" />
           Refresh Status
         </Button>

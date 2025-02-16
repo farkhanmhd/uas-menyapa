@@ -4,7 +4,6 @@ import { Toaster } from "@/components/ui/toaster";
 import { SessionProvider } from "next-auth/react";
 import ClientProvider from "@/components/providers/client";
 import "./globals.css";
-import { ThemeProvider } from "@/components/providers/theme-provider";
 import { ViewTransitions } from "next-view-transitions";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 
@@ -27,15 +26,8 @@ export default function RootLayout({
         <body className={`${GeistSans.className} antialiased`}>
           <ClientProvider>
             <SessionProvider>
-              <ThemeProvider
-                attribute="class"
-                defaultTheme="system"
-                enableSystem
-                disableTransitionOnChange
-              >
-                <NuqsAdapter>{children}</NuqsAdapter>
-                <Toaster />
-              </ThemeProvider>
+              <NuqsAdapter>{children}</NuqsAdapter>
+              <Toaster />
             </SessionProvider>
           </ClientProvider>
         </body>

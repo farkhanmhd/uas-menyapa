@@ -17,7 +17,12 @@ import { Button, buttonVariants } from "@/components/ui/button";
 import CheckoutSection from "./checkout-section";
 import EventFAQ from "./event-faq";
 
-export function EventDetail({ ...props }: IEvent) {
+type Props = {
+  props: IEvent;
+  verified: boolean;
+};
+
+export function EventDetail({ props, verified }: Props) {
   const now = new Date();
   const eventStart = new Date(props.startTime);
   const eventEnd = new Date(props.endTime);
@@ -142,18 +147,21 @@ export function EventDetail({ ...props }: IEvent) {
         </Card>
         <EventFAQ questions={props.questions} answers={props.answers} />
       </div>
-      <div className="fixed bottom-0 left-0 right-0 z-50 md:col-span-4 lg:sticky lg:top-[112px] lg:z-0 lg:self-start xl:col-span-3">
-        {eventStatus === "upcoming" ? (
+      {eventStatus === "upcoming" ? (
+        <div className="fixed bottom-0 left-0 right-0 z-50 md:col-span-4 lg:sticky lg:top-[112px] lg:z-0 lg:self-start xl:col-span-3">
           <CheckoutSection
             vipAvailability={props.vipAvailability}
             vipPrice={props.vipPrice}
             regulerAvailability={props.regulerAvailability}
             regulerPrice={props.regulerPrice}
+            verified={verified}
           />
-        ) : (
+        </div>
+      ) : (
+        <div className="md:col-span-5 lg:col-span-4 xl:col-span-3">
           <EventStatusUI />
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
 }

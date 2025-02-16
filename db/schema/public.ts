@@ -11,6 +11,8 @@ import {
 import { randomUUID } from "crypto";
 import { relations } from "drizzle-orm";
 import { users } from "./authentication";
+import { customAlphabet } from "nanoid";
+const nanoid = customAlphabet("1234567890abcdef", 10);
 
 /** 🎟 Events Table */
 export const events = mysqlTable("events", {
@@ -19,6 +21,9 @@ export const events = mysqlTable("events", {
     .$defaultFn(() => `event-${randomUUID()}`),
   title: varchar("title", { length: 255 }).notNull(),
   posterUrl: varchar("poster_url", { length: 255 }).notNull(),
+  ticketDesignUrl: varchar("ticket_design_url", { length: 255 }).notNull(),
+  certificateDesignUrl: varchar("certificate_design_url", { length: 255 }),
+  whatsappGroupUrl: varchar("whatsapp_group_url", { length: 255 }),
   description: varchar("description", { length: 255 }).notNull(),
   venue: varchar("venue", { length: 255 }).notNull(),
   city: varchar("city", { length: 255 }).notNull(),
@@ -178,6 +183,40 @@ export const paymentDetails = mysqlTable(
   }),
 );
 
+/** 🎟 Tickets Table */
+export const tickets = mysqlTable("tickets", {
+  id: varchar("id", { length: 50 })
+    .primaryKey()
+    .$defaultFn(() => nanoid()),
+  orderId: varchar("order_id", { length: 50 })
+    .notNull()
+    .references(() => orders.id, { onDelete: "cascade" }),
+  eventId: varchar("event_id", { length: 50 })
+    .notNull()
+    .references(() => events.id, { onDelete: "cascade" }),
+  participantName: varchar("participant_name", { length: 255 }),
+  whatsappNumber: varchar("whatsapp_number", { length: 15 }),
+  presence: mysqlEnum("presence", ["waiting", "present", "absent"])
+    .notNull()
+    .default("waiting"),
+  ticketType: mysqlEnum("ticket_type", ["reguler", "vip"]).notNull(),
+  createdAt: timestamp("created_at", { mode: "string" }).notNull().defaultNow(),
+  updatedAt: timestamp("updated_at", { mode: "string" }).notNull().defaultNow(),
+});
+
+export const certificates = mysqlTable("certificates", {
+  id: varchar("id", { length: 50 })
+    .primaryKey()
+    .$defaultFn(() => nanoid()),
+  ticketId: varchar("ticket_id", { length: 50 })
+    .notNull()
+    .references(() => tickets.id, { onDelete: "cascade" })
+    .unique()
+    .notNull(),
+  createdAt: timestamp("created_at", { mode: "string" }).notNull().defaultNow(),
+  updatedAt: timestamp("updated_at", { mode: "string" }).notNull().defaultNow(),
+});
+
 /** 🔗 Relations */
 export const eventAvailabilityRelations = relations(
   eventAvailability,
@@ -217,12 +256,26 @@ export const userRelations = relations(users, ({ many }) => ({
   orders: many(orders),
 }));
 
+export const ticketRelations = relations(tickets, ({ one }) => ({
+  order: one(orders, { fields: [tickets.orderId], references: [orders.id] }),
+  event: one(events, { fields: [tickets.eventId], references: [events.id] }),
+}));
+
+export const certificateRelations = relations(certificates, ({ one }) => ({
+  ticket: one(tickets, {
+    fields: [certificates.ticketId],
+    references: [tickets.id],
+  }),
+}));
+
 export type Order = typeof orders.$inferSelect;
 export type Event = typeof events.$inferSelect;
 export type EventAvailability = typeof eventAvailability.$inferSelect;
 export type EventPrice = typeof eventPrice.$inferSelect;
 export type EventQuestion = typeof eventQuestions.$inferSelect;
 export type PaymentDetail = typeof paymentDetails.$inferSelect;
+export type Ticket = typeof tickets.$inferSelect;
+export type Certificate = typeof certificates.$inferSelect;
 
 export type OrderInsert = typeof orders.$inferInsert;
 export type EventInsert = typeof events.$inferInsert;
@@ -230,3 +283,5 @@ export type EventAvailabilityInsert = typeof eventAvailability.$inferInsert;
 export type EventPriceInsert = typeof eventPrice.$inferInsert;
 export type EventQuestionInsert = typeof eventQuestions.$inferInsert;
 export type PaymentDetailInsert = typeof paymentDetails.$inferInsert;
+export type TicketInsert = typeof tickets.$inferInsert;
+export type CertificateInsert = typeof certificates.$inferInsert;

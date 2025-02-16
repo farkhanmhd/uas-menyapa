@@ -44,13 +44,13 @@ var dotenv_1 = require("dotenv");
 var crons = function () {
     console.log("Starting cron jobs");
     // expire orders
-    cron.schedule("0 * * * *", function () { return __awaiter(void 0, void 0, void 0, function () {
-        var expireOrderResponse, json, error_1;
+    cron.schedule("* * * * *", function () { return __awaiter(void 0, void 0, void 0, function () {
+        var expireOrderResponse, json, error_1, generateCertificateRespons, json, error_2;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
-                    // Run every hour
-                    console.log("Running cron job to expire all orders for every hour");
+                    // Run every minute
+                    console.log("Running cron job to expire all orders for every minute");
                     _a.label = 1;
                 case 1:
                     _a.trys.push([1, 4, , 5]);
@@ -68,7 +68,23 @@ var crons = function () {
                     error_1 = _a.sent();
                     console.error("Error in expireOrdersCronJob:", error_1);
                     return [3 /*break*/, 5];
-                case 5: return [2 /*return*/];
+                case 5:
+                    _a.trys.push([5, 8, , 9]);
+                    return [4 /*yield*/, fetch("".concat(process.env.BASE_URL, "/api/certificates"), {
+                            method: "POST",
+                        })];
+                case 6:
+                    generateCertificateRespons = _a.sent();
+                    return [4 /*yield*/, generateCertificateRespons.json()];
+                case 7:
+                    json = _a.sent();
+                    console.log(json);
+                    return [3 /*break*/, 9];
+                case 8:
+                    error_2 = _a.sent();
+                    console.error("Error in generateCertificateCronJob", error_2);
+                    return [3 /*break*/, 9];
+                case 9: return [2 /*return*/];
             }
         });
     }); });

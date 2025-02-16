@@ -14,7 +14,7 @@ export function EventCard({ ...event }: IEventCard) {
   return (
     <Card
       key={event.id}
-      className="flex h-full cursor-pointer flex-col justify-between overflow-hidden"
+      className="flex h-full cursor-pointer flex-col justify-between overflow-hidden duration-200 hover:bg-muted"
       onClick={() => push(`/events/${event.id}`)}
     >
       <CardContent className="p-0">

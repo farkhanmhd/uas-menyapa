@@ -8,9 +8,9 @@ config({ path: "./.env" });
 const crons = () => {
   console.log("Starting cron jobs");
   // expire orders
-  cron.schedule("0 * * * *", async () => {
-    // Run every hour
-    console.log("Running cron job to expire all orders for every hour");
+  cron.schedule("* * * * *", async () => {
+    // Run every minute
+    console.log("Running cron job to expire all orders for every minute");
 
     try {
       const expireOrderResponse = await fetch(
@@ -24,6 +24,20 @@ const crons = () => {
       console.log(json);
     } catch (error) {
       console.error("Error in expireOrdersCronJob:", error);
+    }
+
+    try {
+      const generateCertificateRespons = await fetch(
+        `${process.env.BASE_URL}/api/certificates`,
+        {
+          method: "POST",
+        },
+      );
+
+      const json = await generateCertificateRespons.json();
+      console.log(json);
+    } catch (error) {
+      console.error("Error in generateCertificateCronJob", error);
     }
   });
 };

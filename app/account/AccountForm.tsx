@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useAction } from "next-safe-action/hooks";
 import { useTransitionRouter } from "next-view-transitions";
+import { cn } from "@/lib/utils";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import PhoneInput from "@/components/fragments/PhoneInput";
@@ -23,6 +24,7 @@ import { parseDate } from "@internationalized/date";
 import { format } from "date-fns";
 import { updateAccountAction } from "../lib/actions/account";
 import { toast } from "@/hooks/use-toast";
+import LogOutDialog from "@/components/fragments/LogoutDialog";
 
 const genderOpts: SelectOption[] = [
   {
@@ -58,6 +60,7 @@ type Props = {
 
 const AccountForm = (props: Props) => {
   const { back } = useTransitionRouter();
+  const [name, setName] = useState<string>(props.name || "");
   const [whatsapp, setWhatsapp] = useState<string>(props.whatsapp || "");
   const [gender, setGender] = useState<"male" | "female">(
     (props.gender as "male" | "female") || genderOpts[0].value,
@@ -70,10 +73,10 @@ const AccountForm = (props: Props) => {
     parseDate(format(props.dateOfBirth, "yyyy-MM-dd")) || new Date(),
   );
 
-  const { execute, isPending } = useAction(
+  const { execute, isPending, result } = useAction(
     async (formData) => {
       const data = {
-        whatsapp: `+62${formData.get("whatsapp")}`,
+        whatsapp: formData.get("whatsapp"),
         name: formData.get("name") as string,
         address: formData.get("address") as string,
         dateOfBirth: new Date(dob.toString()),
@@ -85,7 +88,6 @@ const AccountForm = (props: Props) => {
     },
     {
       onSettled: (actionResult) => {
-        console.log(actionResult);
         if (actionResult?.result?.data) {
           const { message } = actionResult?.result?.data;
 
@@ -102,6 +104,9 @@ const AccountForm = (props: Props) => {
       },
     },
   );
+
+  const whatsappError = result?.validationErrors?.whatsapp?._errors?.join();
+  const nameError = result?.validationErrors?.name?._errors?.join();
 
   return (
     <>
@@ -120,15 +125,29 @@ const AccountForm = (props: Props) => {
         <CardContent>
           <form action={execute} className="flex flex-col gap-y-6">
             <div className="space-y-2">
-              <Label htmlFor="name">Nama Lengkap</Label>
-              <Input
-                id="name"
-                placeholder="Nama Lengkap"
-                className="placeholder:text-sm"
-                autoComplete="off"
-                defaultValue={props.name || ""}
-                name="name"
-              />
+              <div className="flex flex-col gap-y-2">
+                <Label htmlFor="name">Nama Lengkap</Label>
+                <Input
+                  id="name"
+                  placeholder="Nama Lengkap"
+                  className={cn("placeholder:text-sm", {
+                    "border-destructive/80 text-destructive focus-visible:border-destructive/80 focus-visible:ring-destructive/20":
+                      nameError,
+                  })}
+                  autoComplete="off"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  name="name"
+                />
+                {nameError && (
+                  <span
+                    className="mt-2 block text-sm text-destructive"
+                    aria-live="polite"
+                  >
+                    {nameError}
+                  </span>
+                )}
+              </div>
             </div>
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
@@ -140,12 +159,26 @@ const AccountForm = (props: Props) => {
                 className="placeholder:text-sm"
               />
             </div>
-            <PhoneInput
-              label="Nomor Whatsapp"
-              id="whatsapp"
-              value={whatsapp}
-              onChange={setWhatsapp}
-            />
+            <div>
+              <PhoneInput
+                label="Nomor Whatsapp"
+                id="whatsapp"
+                value={whatsapp}
+                onChange={setWhatsapp}
+                className={cn({
+                  "border-destructive/80 text-destructive focus-visible:border-destructive/80 focus-visible:ring-destructive/20":
+                    whatsappError,
+                })}
+              />
+              {whatsappError && (
+                <span
+                  className="mt-2 block text-sm text-destructive"
+                  aria-live="polite"
+                >
+                  {whatsappError}
+                </span>
+              )}
+            </div>
             <div className="space-y-2">
               <Label htmlFor="address">Alamat</Label>
               <Input
@@ -161,7 +194,7 @@ const AccountForm = (props: Props) => {
               label="Tanggal Lahir"
               id="date-of-birth"
               date={dob}
-              onChange={setDob}
+              onChange={(date: DateValue | null) => setDob(date as DateValue)}
             />
             <div className="flex flex-col gap-x-8 gap-y-6 sm:flex-row">
               <RadioInput
@@ -174,9 +207,9 @@ const AccountForm = (props: Props) => {
               />
               <RadioInput
                 options={marriageStatusOpts}
-                label="Jenis Kelamin"
-                id="gender"
-                name="gender"
+                label="Status Pernikahan"
+                id="marriage-status"
+                name="marriage-status"
                 value={marriage}
                 onChange={setMarriage as (value: string) => void}
               />
@@ -193,6 +226,13 @@ const AccountForm = (props: Props) => {
           </form>
         </CardContent>
       </Card>
+      <div className="px-4 md:px-0">
+        <LogOutDialog>
+          <Button variant="secondary" className="mt-6 w-full">
+            Logout
+          </Button>
+        </LogOutDialog>
+      </div>
     </>
   );
 };

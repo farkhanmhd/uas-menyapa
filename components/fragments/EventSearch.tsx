@@ -37,7 +37,7 @@ export default function EventSearch() {
   };
 
   return (
-    <form className="mb-8 space-y-4 pt-8">
+    <form>
       <div className="grid grid-cols-1 flex-wrap gap-4 md:grid-cols-3">
         <div className="min-w-[200px] flex-1 space-y-2 md:col-span-2">
           <Input

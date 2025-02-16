@@ -44,7 +44,11 @@ export default function SelectInputIcon({
           <MapItems
             of={options}
             render={(option, index) => (
-              <SelectItem key={index} value={option.value}>
+              <SelectItem
+                key={index}
+                value={option.value}
+                className="cursor-pointer hover:bg-muted"
+              >
                 <div>{option.icon}</div>
                 <span className="flex-grow truncate text-center font-semibold">
                   {option.label}

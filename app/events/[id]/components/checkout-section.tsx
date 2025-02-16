@@ -37,6 +37,8 @@ import {
 import { createOrderAction } from "@/app/lib/actions/orders";
 import { toast } from "@/hooks/use-toast";
 import { Dialog, DialogPanel, DialogBackdrop } from "@headlessui/react";
+import UpdateWhatsappDialog from "@/components/fragments/UpdateWhatsappDialog";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 const ticketVariant: { label: string; value: TicketVariant }[] = [
   {
@@ -97,6 +99,7 @@ type Props = {
   vipPrice: number;
   regulerAvailability: number;
   regulerPrice: number;
+  verified: boolean;
 };
 
 export default function CheckoutSection({
@@ -104,6 +107,7 @@ export default function CheckoutSection({
   vipPrice,
   regulerAvailability,
   regulerPrice,
+  verified,
 }: Props) {
   const { data: session } = useSession();
   const { push } = useRouter();
@@ -166,6 +170,7 @@ export default function CheckoutSection({
         push(`/orders/${orderId}`);
       } else {
         toast({
+          title: "Failed",
           description: actionResult?.result?.data?.message,
           variant: "destructive",
         });
@@ -233,82 +238,86 @@ export default function CheckoutSection({
           </p>
         </div>
       ) : (
-        <div className="grid w-full items-center gap-2 md:gap-4">
-          {(vipAvailability === 0 || regulerAvailability === 0) && (
-            <div className="mb-4 flex items-center space-x-2 rounded-md bg-yellow-100 p-4">
-              <AlertCircle className="h-5 w-5 text-yellow-800" />
-              <p className="text-yellow-800">
-                {vipAvailability === 0
-                  ? "VIP tickets are sold out. Only Regular tickets are available."
-                  : "Regular tickets are sold out. Only VIP tickets are available."}
+        <ScrollArea className="h-[calc(100dvh-11rem)] sm:h-auto">
+          <div className="grid w-full items-center gap-6 md:gap-4">
+            {(vipAvailability === 0 || regulerAvailability === 0) && (
+              <div className="mb-4 flex items-center space-x-2 rounded-md bg-yellow-100 p-4">
+                <AlertCircle className="h-5 w-5 text-yellow-800" />
+                <p className="text-yellow-800">
+                  {vipAvailability === 0
+                    ? "VIP tickets are sold out. Only Regular tickets are available."
+                    : "Regular tickets are sold out. Only VIP tickets are available."}
+                </p>
+              </div>
+            )}
+            <RadioVariant
+              options={ticketVariant.map((t) => ({
+                ...t,
+                disabled:
+                  t.value === "vip"
+                    ? vipAvailability === 0
+                    : regulerAvailability === 0,
+              }))}
+              value={variant}
+              onChange={(value) => setVariant(value as TicketVariant)}
+              label="Tipe Tiket"
+            />
+            <div className="flex items-center justify-between">
+              <Label>Harga Tiket</Label>
+              <p className="text-lg font-semibold">
+                {formatToIDR(selectedPrice)}
               </p>
             </div>
-          )}
-          <RadioVariant
-            options={ticketVariant.map((t) => ({
-              ...t,
-              disabled:
-                t.value === "vip"
-                  ? vipAvailability === 0
-                  : regulerAvailability === 0,
-            }))}
-            value={variant}
-            onChange={(value) => setVariant(value as TicketVariant)}
-            label="Tipe Tiket"
-          />
-          <div className="flex items-center justify-between">
-            <Label>Harga Tiket</Label>
-            <p className="text-lg font-semibold">
-              {formatToIDR(selectedPrice)}
-            </p>
-          </div>
-          <div className="flex items-center justify-between">
-            <Label>Jumlah</Label>
-            <div className="max-w-[115px]">
-              <NumberInput
-                value={quantity}
-                setValue={setQuantity}
-                minValue={1}
-                maxValue={maxPurchase}
-              />
-            </div>
-          </div>
-
-          <SelectInputIcon
-            options={paymentOptions}
-            label="Metode Pembayaran"
-            placeholder="Pilih Metode"
-            value={paymentMethod}
-            onChange={setPaymentMethod}
-          />
-
-          <div className="flex items-center justify-between">
-            <Label>Subtotal</Label>
-            <p className="text-lg font-semibold">{formatToIDR(subtotal)}</p>
-          </div>
-
-          <div className="flex items-center justify-between">
-            <Label>Biaya Layanan</Label>
-            <p className="text-lg font-semibold">{formatToIDR(serviceFee)}</p>
-          </div>
-
-          {paymentMethod !== "gopay" && paymentMethod !== "qris" && (
             <div className="flex items-center justify-between">
-              <Label>PPN (11% dari Biaya Layanan)</Label>
-              <p className="text-lg font-semibold">{formatToIDR(vat)}</p>
+              <Label>Jumlah</Label>
+              <div className="max-w-[130px]">
+                <NumberInput
+                  value={quantity}
+                  setValue={setQuantity}
+                  minValue={1}
+                  maxValue={maxPurchase}
+                />
+              </div>
             </div>
-          )}
 
-          <div className="flex items-center justify-between">
-            <Label>Total</Label>
-            <p className="text-xl font-semibold">{formatToIDR(total)}</p>
+            <SelectInputIcon
+              options={paymentOptions}
+              label="Metode Pembayaran"
+              placeholder="Pilih Metode"
+              value={paymentMethod}
+              onChange={setPaymentMethod}
+            />
+
+            <div className="flex items-center justify-between">
+              <Label>Subtotal</Label>
+              <p className="text-lg font-semibold">{formatToIDR(subtotal)}</p>
+            </div>
+
+            <div className="flex items-center justify-between">
+              <Label>Biaya Layanan</Label>
+              <p className="text-lg font-semibold">{formatToIDR(serviceFee)}</p>
+            </div>
+
+            {paymentMethod !== "gopay" && paymentMethod !== "qris" && (
+              <div className="flex items-center justify-between">
+                <Label>PPN (11% dari Biaya Layanan)</Label>
+                <p className="text-lg font-semibold">{formatToIDR(vat)}</p>
+              </div>
+            )}
+
+            <div className="flex items-center justify-between">
+              <Label>Total</Label>
+              <p className="text-xl font-semibold">{formatToIDR(total)}</p>
+            </div>
           </div>
-        </div>
+        </ScrollArea>
       )}
       <div className="mt-4">
         {!session ? (
-          <GoogleLoginDialog label="Beli Tiket" />
-        ) : (
+          <GoogleLoginDialog>
+            <Button className="w-full">Checkout</Button>
+          </GoogleLoginDialog>
+        ) : verified ? (
           <Button
             onClick={() => {
               setDialogOpen(true);
@@ -319,6 +328,8 @@ export default function CheckoutSection({
           >
             {isSelectedTicketAvailable ? "Checkout" : "Ticket Out of Stock"}
           </Button>
+        ) : (
+          <UpdateWhatsappDialog />
         )}
       </div>
     </>
@@ -327,7 +338,7 @@ export default function CheckoutSection({
   const ConfirmationDialog = () => (
     <Dialog
       open={dialogOpen || isPending}
-      onClose={() => setDialogOpen(false)}
+      onClose={() => setDialogOpen(true)}
       className="relative z-[60] data-[closed]:opacity-0"
     >
       <DialogBackdrop
@@ -348,7 +359,7 @@ export default function CheckoutSection({
                 <span>Processing</span>
               </>
             ) : (
-              <span>Checkout</span>
+              <span>Pesan Tiket</span>
             )}
           </Button>
           <Button
@@ -387,7 +398,7 @@ export default function CheckoutSection({
       <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
         <SheetTrigger asChild>
           <Button
-            className="fixed bottom-2 left-4 right-4 z-50 h-10"
+            className="fixed bottom-[90px] left-4 right-4 z-50 h-10 md:bottom-4"
             disabled={!isTicketAvailable}
           >
             {isTicketAvailable ? "Pesan Tiket" : "Tickets Sold Out"}

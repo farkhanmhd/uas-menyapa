@@ -1,7 +1,10 @@
 "use client";
 
+import type React from "react";
+import { useState, useEffect } from "react";
 import { Minus, Plus } from "lucide-react";
-import { Button, Group, Input, NumberField } from "react-aria-components";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 
 type NumberInputProps = {
   value: number;
@@ -10,30 +13,78 @@ type NumberInputProps = {
   maxValue: number;
 };
 
-export default function NumberInput({ ...props }: NumberInputProps) {
+export default function NumberInput({
+  value,
+  setValue,
+  minValue,
+  maxValue,
+}: NumberInputProps) {
+  const [inputValue, setInputValue] = useState(value.toString());
+
+  useEffect(() => {
+    setInputValue(value.toString());
+  }, [value]);
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newValue = e.target.value;
+    if (newValue === "" || /^-?\d*\.?\d*$/.test(newValue)) {
+      setInputValue(newValue);
+    }
+  };
+
+  const handleBlur = () => {
+    let newValue = Number.parseFloat(inputValue);
+    if (isNaN(newValue)) {
+      newValue = minValue;
+    } else if (newValue < minValue) {
+      newValue = minValue;
+    } else if (newValue > maxValue) {
+      newValue = maxValue;
+    }
+    setValue(newValue);
+    setInputValue(newValue.toString());
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      handleBlur();
+    }
+  };
+
+  const handleDecrement = () => {
+    setValue(Math.max(minValue, value - 1));
+  };
+
+  const handleIncrement = () => {
+    setValue(Math.min(maxValue, value + 1));
+  };
+
   return (
-    <NumberField
-      value={props.value}
-      minValue={props.minValue}
-      maxValue={props.maxValue}
-      onChange={props.setValue}
-      aria-label="Numeric input"
-    >
-      <Group className="relative inline-flex h-9 w-full items-center overflow-hidden whitespace-nowrap rounded-lg border border-input text-sm shadow-sm shadow-black/5 transition-shadow data-[focus-within]:border-ring data-[disabled]:opacity-50 data-[focus-within]:outline-none">
-        <Button
-          slot="decrement"
-          className="-ms-px flex aspect-square h-[inherit] items-center justify-center rounded-s-lg border border-input bg-background text-sm text-muted-foreground/80 transition-shadow hover:bg-accent hover:text-foreground disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50"
-        >
-          <Minus size={16} strokeWidth={2} aria-hidden="true" />
-        </Button>
-        <Input className="w-full grow bg-background px-1 py-2 text-center text-xs tabular-nums text-foreground focus:outline-none" />
-        <Button
-          slot="increment"
-          className="-me-px flex aspect-square h-[inherit] items-center justify-center rounded-e-lg border border-input bg-background text-sm text-muted-foreground/80 transition-shadow hover:bg-accent hover:text-foreground disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50"
-        >
-          <Plus size={16} strokeWidth={2} aria-hidden="true" />
-        </Button>
-      </Group>
-    </NumberField>
+    <div className="flex h-9 w-full items-center overflow-hidden rounded-md border border-input shadow-sm">
+      <Button
+        variant="ghost"
+        onClick={handleDecrement}
+        disabled={value <= minValue}
+        className="rounded-none px-3"
+      >
+        <Minus size={16} />
+      </Button>
+      <Input
+        type="text"
+        value={inputValue}
+        onChange={handleInputChange}
+        onBlur={handleBlur}
+        onKeyDown={handleKeyDown}
+        className="h-full w-full border-none px-2 text-center focus-visible:ring-0"
+      />
+      <Button
+        variant="ghost"
+        onClick={handleIncrement}
+        disabled={value >= maxValue}
+        className="rounded-none px-3"
+      >
+        <Plus size={16} />
+      </Button>
+    </div>
   );
 }

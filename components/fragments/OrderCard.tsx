@@ -3,11 +3,12 @@ import Link from "next/link";
 import type { OrderCard as OrderCardProps } from "@/types";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
-import { formatDateOrder, formatCurrency } from "@/lib/utils";
+import { formatCurrency } from "@/lib/utils";
+import { EventTime } from "./EventTime";
 
 const OrderCard = ({ ...order }: OrderCardProps) => {
   return (
-    <Card className="overflow-hidden">
+    <Card className="overflow-hidden duration-200 hover:bg-muted">
       <Link
         href={`/orders/${order.orderId}`}
         className="grid grid-cols-8 md:grid-cols-6"
@@ -50,12 +51,12 @@ const OrderCard = ({ ...order }: OrderCardProps) => {
               <span className="font-semibold uppercase">{order.qty}</span>
             </p>
             <p className="flex justify-between">
-              <span className="font-medium">Start:</span>
-              <span>{formatDateOrder(order.startTime)}</span>
-            </p>
-            <p className="flex justify-between">
-              <span className="font-medium">End:</span>
-              <span>{formatDateOrder(order.endTime)}</span>
+              <span className="font-medium">Time:</span>
+              <EventTime
+                className="md:text-sm"
+                startTime={new Date(order.startTime)}
+                endTime={new Date(order.endTime)}
+              />
             </p>
             <p className="flex justify-between">
               <span className="font-medium">Payment Type:</span>

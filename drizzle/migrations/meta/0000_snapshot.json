@@ -1,7 +1,7 @@
 {
   "version": "5",
   "dialect": "mysql",
-  "id": "33552cb2-aa44-4d43-b3d0-15ef95a7bf81",
+  "id": "e423f041-2659-4857-a73d-f86b96362082",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "account": {
@@ -284,9 +284,9 @@
           "notNull": false,
           "autoincrement": false
         },
-        "age": {
-          "name": "age",
-          "type": "int",
+        "date_of_birth": {
+          "name": "date_of_birth",
+          "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false
@@ -407,6 +407,74 @@
         }
       },
       "uniqueConstraints": {},
+      "checkConstraint": {}
+    },
+    "certificates": {
+      "name": "certificates",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "varchar(50)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "ticket_id": {
+          "name": "ticket_id",
+          "type": "varchar(50)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(now())"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(now())"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "certificates_ticket_id_tickets_id_fk": {
+          "name": "certificates_ticket_id_tickets_id_fk",
+          "tableFrom": "certificates",
+          "tableTo": "tickets",
+          "columnsFrom": [
+            "ticket_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "certificates_id": {
+          "name": "certificates_id",
+          "columns": [
+            "id"
+          ]
+        }
+      },
+      "uniqueConstraints": {
+        "certificates_ticket_id_unique": {
+          "name": "certificates_ticket_id_unique",
+          "columns": [
+            "ticket_id"
+          ]
+        }
+      },
       "checkConstraint": {}
     },
     "event_availability": {
@@ -664,6 +732,20 @@
           "type": "varchar(255)",
           "primaryKey": false,
           "notNull": true,
+          "autoincrement": false
+        },
+        "ticket_design_url": {
+          "name": "ticket_design_url",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "certificate_design_url": {
+          "name": "certificate_design_url",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false,
           "autoincrement": false
         },
         "description": {
@@ -1046,6 +1128,116 @@
       "compositePrimaryKeys": {
         "payment_details_id": {
           "name": "payment_details_id",
+          "columns": [
+            "id"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "checkConstraint": {}
+    },
+    "tickets": {
+      "name": "tickets",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "varchar(50)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "order_id": {
+          "name": "order_id",
+          "type": "varchar(50)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "event_id": {
+          "name": "event_id",
+          "type": "varchar(50)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "participant_name": {
+          "name": "participant_name",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "whatsapp_number": {
+          "name": "whatsapp_number",
+          "type": "varchar(15)",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "presence": {
+          "name": "presence",
+          "type": "enum('waiting','present','absent')",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "'waiting'"
+        },
+        "ticket_type": {
+          "name": "ticket_type",
+          "type": "enum('reguler','vip')",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(now())"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(now())"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "tickets_order_id_orders_id_fk": {
+          "name": "tickets_order_id_orders_id_fk",
+          "tableFrom": "tickets",
+          "tableTo": "orders",
+          "columnsFrom": [
+            "order_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "tickets_event_id_events_id_fk": {
+          "name": "tickets_event_id_events_id_fk",
+          "tableFrom": "tickets",
+          "tableTo": "events",
+          "columnsFrom": [
+            "event_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "tickets_id": {
+          "name": "tickets_id",
           "columns": [
             "id"
           ]

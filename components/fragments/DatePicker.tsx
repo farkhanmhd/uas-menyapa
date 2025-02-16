@@ -17,12 +17,16 @@ type Props = {
   label?: string;
   id?: string;
   date: DateValue;
-  onChange: (date: DateValue) => void;
+  onChange: (date: DateValue | null) => void;
 };
 
 export default function DatePicker(props: Props) {
   return (
-    <DatePickerRac className="space-y-2">
+    <DatePickerRac
+      className="space-y-2"
+      value={props.date}
+      onChange={props.onChange}
+    >
       <Label className="text-sm font-medium text-foreground" htmlFor={props.id}>
         {props.label}
       </Label>

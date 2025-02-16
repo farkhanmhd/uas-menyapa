@@ -10,6 +10,8 @@ declare module "next-auth" {
     role: "superadmin" | "admin" | "customer";
   }
 
+  interface JWT extends User {}
+
   interface Session {
     user: {
       id: string;

@@ -6,7 +6,7 @@ export const AsyncAccountForm = async () => {
 
   return (
     <AccountForm
-      whatsapp={user.whatsapp ?? ""}
+      whatsapp={user.whatsapp?.slice(3, user.whatsapp.length) ?? ""}
       name={user.name ?? ""}
       address={user.address ?? ""}
       gender={user.gender ?? ""}

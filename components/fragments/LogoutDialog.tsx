@@ -1,6 +1,5 @@
 import {
   AlertDialog,
-  AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
@@ -9,14 +8,16 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { signOut } from "next-auth/react";
 import { Button } from "@/components/ui/button";
+import { logoutAction } from "@/app/lib/auth";
+import { useActionState } from "react";
 
 export default function LogOutDialog({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const [, action, isPending] = useActionState(logoutAction, null);
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>{children}</AlertDialogTrigger>
@@ -24,19 +25,24 @@ export default function LogOutDialog({
         <AlertDialogHeader>
           <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
           <AlertDialogDescription>
-            This action cannot be undone.
+            Logging out will end your current session. You will need to sign in
+            again to regain access to your account.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel asChild>
             <Button variant="secondary">Cancel</Button>
           </AlertDialogCancel>
-          <AlertDialogAction
-            asChild
-            onClick={() => signOut({ callbackUrl: "/" })}
-          >
-            <Button variant="destructive">Logout</Button>
-          </AlertDialogAction>
+          <form action={action}>
+            <Button
+              type="submit"
+              className="w-full"
+              variant="destructive"
+              disabled={isPending}
+            >
+              {isPending ? "Logging out..." : "Logout"}
+            </Button>
+          </form>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

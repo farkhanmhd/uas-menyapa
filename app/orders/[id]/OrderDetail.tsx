@@ -6,9 +6,9 @@ import { Card, CardContent } from "@/components/ui/card";
 import { ClientInteractions } from "./ClientInteractions";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { cn } from "@/lib/utils";
 import { PaymentStatusBanner } from "./PaymentStatusBanner";
 import { EventDetails } from "./EventDetails";
+import { formatCurrency } from "@/lib/utils";
 
 interface OrderDetailProps {
   payment: PaymentData;
@@ -41,12 +41,7 @@ export function OrderDetail({ payment }: OrderDetailProps) {
   return (
     <div className="container mx-auto max-w-3xl px-4 pb-8">
       <h1 className="mb-6 text-2xl font-bold">Order Details</h1>
-      <Card
-        className={cn(
-          "transition-colors duration-300",
-          isPaid ? "bg-green-50" : isPending ? "bg-red-50" : "",
-        )}
-      >
+      <Card>
         <CardContent className="p-6">
           <div className="space-y-6">
             <PaymentStatusBanner
@@ -70,7 +65,7 @@ export function OrderDetail({ payment }: OrderDetailProps) {
             <div className="grid grid-cols-2 gap-y-4">
               <div>
                 <p className="text-sm text-muted-foreground">Ticket Type</p>
-                <p className="mt-1 font-medium capitalize">
+                <p className="mt-1 font-medium uppercase">
                   {payment.orders.ticketType}
                 </p>
               </div>
@@ -79,14 +74,18 @@ export function OrderDetail({ payment }: OrderDetailProps) {
                 <p className="mt-1 font-medium">{payment.orders.orderQty}</p>
               </div>
               <div>
-                <p className="text-sm text-muted-foreground">Amount</p>
+                <p className="text-sm text-muted-foreground">Total</p>
                 <p className="mt-1 font-medium">
-                  {payment.payment_details.currency}{" "}
-                  {payment.payment_details.grossAmount.toLocaleString()}
+                  {formatCurrency(
+                    payment.payment_details.grossAmount,
+                    payment.payment_details.currency,
+                  )}
                 </p>
               </div>
               <div>
-                <p className="text-sm text-muted-foreground">Payment Method</p>
+                <p className="text-sm text-muted-foreground">
+                  Metode Pembayaran
+                </p>
                 <p className="mt-1 font-medium">{paymentDetails.type}</p>
               </div>
             </div>
@@ -111,6 +110,8 @@ export function OrderDetail({ payment }: OrderDetailProps) {
               isPaid={isPaid}
               expiryTime={payment.payment_details.expiryTime}
               actions={payment.payment_details.actions}
+              eventId={payment.events.id}
+              whatsapp={payment.events.whatsappGroupUrl}
             />
           </div>
         </CardContent>
