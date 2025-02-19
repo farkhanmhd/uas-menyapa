@@ -8,7 +8,7 @@ config({ path: "./.env" });
 const crons = () => {
   console.log("Starting cron jobs");
   // expire orders
-  cron.schedule("* * * * *", async () => {
+  cron.schedule("0 * * * *", async () => {
     // Run every minute
     console.log("Running cron job to expire all orders for every minute");
 
