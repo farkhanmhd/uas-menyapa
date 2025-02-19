@@ -105,6 +105,7 @@ const ImageUploadDropzone: React.FC<Props> = ({
             <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 opacity-0 transition-opacity group-hover:opacity-100">
               <div className="flex flex-col gap-y-2">
                 <Button
+                  type="button" // Added to prevent form submission
                   size="sm"
                   variant="secondary"
                   onClick={(e) => {
@@ -117,6 +118,7 @@ const ImageUploadDropzone: React.FC<Props> = ({
                   Replace
                 </Button>
                 <Button
+                  type="button" // Added to prevent form submission
                   size="sm"
                   variant="destructive"
                   onClick={(e) => {

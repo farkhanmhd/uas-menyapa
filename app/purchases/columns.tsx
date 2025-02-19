@@ -1,7 +1,7 @@
 "use client";
 
 import type { ColumnDef } from "@tanstack/react-table";
-import type { Attendee } from "./data";
+import { Attendee } from "./data";
 import { Button } from "@/components/ui/button";
 import { ArrowUpDown, Clock, CheckCircle, XCircle } from "lucide-react";
 import { Badge } from "@/components/ui/badge";

@@ -9,17 +9,17 @@ import {
 } from "@/db/schema/public";
 import { auth } from "@/auth";
 
-export async function GET(
-  req: NextRequest,
-  { params }: { params: { id: string } },
-) {
+type Params = Promise<{ id: string }>;
+
+export async function GET(req: NextRequest, segmentData: { params: Params }) {
   const session = await auth();
   if (!session?.user) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
   try {
-    const id = params.id;
+    const params = await segmentData.params;
+    const { id } = params;
     // Fetch event data with availability, price and questions
     const events = await db
       .select({

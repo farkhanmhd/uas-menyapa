@@ -4,9 +4,11 @@ import db from "@/db";
 import { tickets, orders, events } from "@/db/schema/public";
 import { eq } from "drizzle-orm";
 
+type Params = Promise<{ eventId: string }>;
+
 export async function GET(
   request: NextRequest,
-  { params }: { params: { eventId: string } },
+  segmentData: { params: Params },
 ) {
   try {
     const session = await auth();
@@ -16,6 +18,8 @@ export async function GET(
     ) {
       return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
+
+    const params = await segmentData.params;
 
     const ticketData = await db
       .select({

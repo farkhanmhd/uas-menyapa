@@ -533,7 +533,7 @@ export function EventForm({
       </Card>
 
       {/* Submit Button */}
-      <Button type="submit" className="w-full" disabled={isPending}>
+      <Button className="w-full" disabled={isPending}>
         {isPending ? "Submitting..." : "Submit"}
       </Button>
     </form>

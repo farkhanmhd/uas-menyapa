@@ -8,12 +8,15 @@ import {
   eventQuestions,
 } from "@/db/schema/public";
 
+type Params = Promise<{ id: string }>;
+
 export async function GET(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string }> },
+  segmentData: { params: Params },
 ) {
   try {
-    const { id } = await params;
+    const params = await segmentData.params;
+    const { id } = params;
     const events = await db
       .select({
         id: eventDb.id,
