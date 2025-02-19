@@ -16,7 +16,7 @@ export async function POST(req: NextRequest) {
     const notificationJson = await req.json();
 
     const apiClient = new midtransClient.Snap({
-      isProduction: false,
+      isProduction: true,
       serverKey: process.env.MIDTRANS_SERVER_KEY as string,
       clientKey: process.env.MIDTRANS_CLIENT_KEY as string,
     });

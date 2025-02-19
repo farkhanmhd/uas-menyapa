@@ -67,7 +67,7 @@ export const POST = async (req: NextRequest) => {
 
     // Initialize Midtrans client outside transaction
     const core = new midtransClient.CoreApi({
-      isProduction: false,
+      isProduction: true,
       serverKey: process.env.MIDTRANS_SERVER_KEY,
       clientKey: process.env.MIDTRANS_CLIENT_KEY,
     });
