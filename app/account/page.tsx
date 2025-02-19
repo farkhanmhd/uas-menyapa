@@ -7,7 +7,7 @@ const AccountPage = async () => {
   await checkSession();
 
   return (
-    <div className="container mx-auto max-w-xl">
+    <div className="container mx-auto mt-6 max-w-xl">
       <Suspense fallback={<AccountFormSkeleton />}>
         <AsyncAccountForm />
       </Suspense>

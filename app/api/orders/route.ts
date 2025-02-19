@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import midtransClient from "midtrans-client";
 import { randomUUID } from "crypto";
 import { sql, desc, and, eq } from "drizzle-orm";
-import type { OrderStatus } from "../events/searchParams";
+import type { OrderStatus } from "../../lib/searchParams";
 import db from "@/db";
 import {
   orders,
@@ -15,7 +15,7 @@ import {
 import { users } from "@/db/schema/authentication";
 import { calculateTotal } from "@/lib/utils";
 import { BankTransferType, OrderDetails, PaymentType } from "@/types";
-import { loadOrdersSearchParams } from "../events/searchParams";
+import { loadOrdersSearchParams } from "../../lib/searchParams";
 import { auth } from "@/auth";
 import { OrderData, orderSchema } from "@/types";
 import { revalidatePath } from "next/cache";

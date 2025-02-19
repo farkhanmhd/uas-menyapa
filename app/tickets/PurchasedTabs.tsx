@@ -7,7 +7,7 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   purchasedEventsSearchParams,
   PurchasedStatus,
-} from "../api/events/searchParams";
+} from "../lib/searchParams";
 import { MapItems } from "@/lib/utils";
 import { SelectOption } from "@/types";
 

@@ -20,9 +20,10 @@ import EventFAQ from "./event-faq";
 type Props = {
   props: IEvent;
   verified: boolean;
+  role: "customer" | "admin" | "superadmin";
 };
 
-export function EventDetail({ props, verified }: Props) {
+export function EventDetail({ props, verified, role }: Props) {
   const now = new Date();
   const eventStart = new Date(props.startTime);
   const eventEnd = new Date(props.endTime);
@@ -128,6 +129,11 @@ export function EventDetail({ props, verified }: Props) {
                   View Map
                 </Button>
               </Link>
+              {role !== "customer" && (
+                <Link href={`/events/${props.id}/edit`}>
+                  <Button variant="outline">Edit Event</Button>
+                </Link>
+              )}
             </div>
             <p className="text-sm text-muted-foreground md:text-base">
               {props.description}

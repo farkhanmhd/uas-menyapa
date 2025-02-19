@@ -4,7 +4,7 @@ import React from "react";
 import { useQueryStates } from "nuqs";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ordersSearchParams, OrderStatus } from "../api/events/searchParams";
+import { ordersSearchParams, OrderStatus } from "../lib/searchParams";
 import { MapItems } from "@/lib/utils";
 import { SelectOption } from "@/types";
 

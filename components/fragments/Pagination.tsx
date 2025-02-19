@@ -3,7 +3,7 @@
 import { useIsMobile } from "@/hooks/use-mobile";
 import { usePagination } from "@/hooks/use-pagination";
 import { useQueryStates } from "nuqs";
-import { eventSearchParams } from "@/app/api/events/searchParams";
+import { eventSearchParams } from "@/app/lib/searchParams";
 import {
   Pagination,
   PaginationContent,

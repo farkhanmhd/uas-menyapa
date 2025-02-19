@@ -14,6 +14,7 @@ export const createOrderAction = actionClient
     } catch (error) {
       console.log(error);
       return {
+        status: "error",
         message:
           error instanceof Error ? error.message : "Something went wrong",
       };

@@ -15,6 +15,13 @@
       "when": 1739641427527,
       "tag": "0001_overjoyed_morlun",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1739894711218,
+      "tag": "0002_organic_wildside",
+      "breakpoints": true
     }
   ]
 }

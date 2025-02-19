@@ -1,11 +1,12 @@
 import { revalidatePath } from "next/cache";
-import { PurchasedStatus } from "@/app/api/events/searchParams";
+import { PurchasedStatus } from "@/app/lib/searchParams";
 import { PurchasedEvent, Ticket } from "@/types";
 import { headers } from "next/headers";
 import db from "@/db";
 import { tickets, events } from "@/db/schema/public";
 import { eq, and } from "drizzle-orm";
 import { auth } from "@/auth";
+import { format } from "date-fns";
 
 export const getTicketsByEvents = async (
   status: PurchasedStatus,
@@ -71,10 +72,14 @@ export const updateTicketPresence = async (ticketId: string) => {
 
       await tx
         .update(tickets)
-        .set({ presence: "present" })
+        .set({
+          presence: "present",
+          updatedAt: format(new Date(), "yyyy-MM-dd HH:mm:ss"),
+        })
         .where(eq(tickets.id, ticketId));
 
       revalidatePath(`/tickets/${ticketRow[0].eventId}`);
+      revalidatePath("/purchases");
     });
 
     return {

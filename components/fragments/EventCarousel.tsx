@@ -19,7 +19,7 @@ export default async function EventCarousel() {
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         <MapItems
           of={events}
-          render={(event, index) => <EventCard key={index} {...event} />}
+          render={(event, index) => <EventCard key={index} event={event} />}
         />
         <div className="col-span-1 flex items-center justify-center sm:col-span-2 lg:col-span-3 xl:col-span-4">
           <Link href="/events" className={cn(buttonVariants())}>

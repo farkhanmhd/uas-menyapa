@@ -1,6 +1,6 @@
 import OrderCard from "@/components/fragments/OrderCard";
 import { getOrdersByStatus } from "../lib/orders";
-import { OrderStatus } from "../api/events/searchParams";
+import { OrderStatus } from "../lib/searchParams";
 import { MapItems } from "@/lib/utils";
 import { Inbox } from "lucide-react";
 

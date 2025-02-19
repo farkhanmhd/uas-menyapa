@@ -71,6 +71,7 @@ export async function POST(req: NextRequest) {
           revalidatePath("/orders");
           revalidatePath(`/events/${eventId}`);
           revalidatePath("/tickets");
+          revalidatePath("/purchases");
 
           console.log(`${orderQty} tickets generated for order ${order_id}`);
         });

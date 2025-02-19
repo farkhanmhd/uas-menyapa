@@ -1,5 +1,6 @@
-import { EventSearchParams } from "@/app/api/events/searchParams";
+import { EventSearchParams } from "@/app/lib/searchParams";
 import { EventList, IEvent, IEventCard } from "@/types";
+import { headers } from "next/headers";
 
 export const getEvents = async (
   searchParams: EventSearchParams,
@@ -19,6 +20,9 @@ export const getEvents = async (
       `${process.env.BASE_URL}/api/events?${queryParams.toString()}`,
       {
         cache: "force-cache",
+        next: {
+          tags: ["events-home"],
+        },
       },
     );
 
@@ -38,6 +42,9 @@ export const getEventById = async (id: string): Promise<{ event: IEvent }> => {
   try {
     const res = await fetch(`${process.env.BASE_URL}/api/events/${id}`, {
       cache: "force-cache",
+      next: {
+        tags: ["event-detail"],
+      },
     });
 
     if (!res.ok) {
@@ -60,6 +67,9 @@ export const getRecommendations = async (
       `${process.env.BASE_URL}/api/events/${id}/recommendations`,
       {
         cache: "force-cache",
+        next: {
+          tags: ["event-recommendations"],
+        },
       },
     );
 
@@ -73,4 +83,23 @@ export const getRecommendations = async (
     console.error("Error:", error);
     throw error;
   }
+};
+
+export const getEditEventData = async (id: string) => {
+  const headerList = await headers();
+  const cookie = headerList.get("cookie");
+  const res = await fetch(`${process.env.BASE_URL}/api/events/${id}/edit`, {
+    method: "GET",
+    cache: "no-store",
+    headers: {
+      cookie: cookie ?? "",
+    },
+  });
+
+  if (!res.ok) {
+    throw new Error("Failed to fetch event data");
+  }
+
+  const json = await res.json();
+  return json;
 };

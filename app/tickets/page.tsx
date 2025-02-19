@@ -1,13 +1,17 @@
 import React from "react";
-import { checkSession } from "../lib";
+import { checkRole, checkSession } from "../lib";
 import PurchasedTabs from "./PurchasedTabs";
 import { MapItems } from "@/lib/utils";
 import { TabsContent } from "@/components/ui/tabs";
-import { PurchasedStatus } from "../api/events/searchParams";
+import { PurchasedStatus } from "../lib/searchParams";
 import { Purchases } from "./Purchases";
+import { redirect } from "next/navigation";
 
 const Page = async () => {
   await checkSession();
+  const role = (await checkRole()) || "customer";
+
+  if (role !== "customer") redirect("/");
   return (
     <div className="container mx-auto px-4 md:py-4">
       <h1 className="mb-6 text-xl font-bold md:text-2xl">

@@ -2,7 +2,15 @@
 
 import { Link } from "next-view-transitions";
 import Image from "next/image";
-import { Home, Calendar, Clipboard, Ticket, User } from "lucide-react";
+import {
+  Home,
+  Calendar,
+  Clipboard,
+  Ticket,
+  User,
+  UserCog,
+  ScanLine,
+} from "lucide-react";
 import { MapItems } from "@/lib/utils";
 import { GoogleLoginDialog } from "@/components/fragments/google-login";
 import {
@@ -26,16 +34,33 @@ import { Button } from "../ui/button";
 import { useActionState } from "react";
 import { logoutAction } from "@/app/lib/auth";
 
-const navItems = [
-  { href: "/", label: "Home", icon: Home },
-  { href: "/events", label: "Events", icon: Calendar },
-  { href: "/orders", label: "Orders", icon: Clipboard },
-  { href: "/tickets", label: "Tickets", icon: Ticket },
-  { href: "/account", label: "Account", icon: User },
-];
+type Props = {
+  user: any;
+  role: "superadmin" | "admin" | "customer";
+};
 
-export default function Navigation({ user }: { user: any }) {
+export default function Navigation({ user, role }: Props) {
   const [, action, isPending] = useActionState(logoutAction, null);
+  const customerNavItems = [
+    { href: "/", label: "Home", icon: Home },
+    { href: "/events", label: "Events", icon: Calendar },
+    { href: "/orders", label: "Orders", icon: Clipboard },
+    { href: "/tickets", label: "Tickets", icon: Ticket },
+    { href: "/account", label: "Account", icon: User },
+  ];
+
+  const adminNavItems = [
+    { href: "/", label: "Home", icon: Home },
+    { href: "/purchases", label: "Purchases", icon: UserCog },
+    { href: "/scan", label: "Scan", icon: ScanLine },
+    { href: "/events", label: "Events", icon: Calendar },
+    { href: "/orders", label: "Orders", icon: Clipboard },
+    { href: "/account", label: "Account", icon: User },
+  ];
+
+  const selectedNavItems =
+    role === "customer" ? customerNavItems : adminNavItems;
+
   return (
     <>
       {/* Desktop Navigation */}
@@ -48,7 +73,7 @@ export default function Navigation({ user }: { user: any }) {
           </div>
           <div className="flex items-center gap-x-6">
             <MapItems
-              of={navItems}
+              of={selectedNavItems}
               render={(item, index) => {
                 // Hide "Orders" and "Tickets" if not logged in
                 if (
@@ -149,7 +174,7 @@ export default function Navigation({ user }: { user: any }) {
       <nav className="fixed inset-x-0 bottom-0 z-50 border-t border-gray-200 bg-background py-3 shadow md:hidden">
         <div className="flex items-center justify-around">
           <MapItems
-            of={navItems}
+            of={selectedNavItems}
             render={(item) => {
               // Hide "Orders" and "Tickets" if not logged in
               if (

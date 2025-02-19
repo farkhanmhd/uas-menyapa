@@ -7,6 +7,7 @@ import {
   index,
   decimal,
   json,
+  text,
 } from "drizzle-orm/mysql-core";
 import { randomUUID } from "crypto";
 import { relations } from "drizzle-orm";
@@ -24,7 +25,7 @@ export const events = mysqlTable("events", {
   ticketDesignUrl: varchar("ticket_design_url", { length: 255 }).notNull(),
   certificateDesignUrl: varchar("certificate_design_url", { length: 255 }),
   whatsappGroupUrl: varchar("whatsapp_group_url", { length: 255 }),
-  description: varchar("description", { length: 255 }).notNull(),
+  description: text("description").notNull(),
   venue: varchar("venue", { length: 255 }).notNull(),
   city: varchar("city", { length: 255 }).notNull(),
   startTime: timestamp("start_time", { mode: "string" }).notNull(),

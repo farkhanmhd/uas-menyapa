@@ -1,7 +1,7 @@
 import React from "react";
 import { PurchasedEventCard } from "@/components/fragments/PurchasedEventCard";
 import { MapItems } from "@/lib/utils";
-import { PurchasedStatus } from "../api/events/searchParams";
+import { PurchasedStatus } from "../lib/searchParams";
 import { getTicketsByEvents } from "../lib/tickets";
 import { Empty } from "@/components/ui/empty";
 

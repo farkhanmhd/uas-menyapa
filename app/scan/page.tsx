@@ -11,7 +11,7 @@ const ScanPage = async () => {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="container mx-auto flex h-[calc(100dvh-80px)] items-center justify-center px-4">
       <ScanContent />
     </div>
   );

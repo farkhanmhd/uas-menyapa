@@ -239,3 +239,13 @@ export interface CertificateData {
   certificateImage: string;
   createdAt: string;
 }
+
+export type Purchases = {
+  eventTitle: string;
+  ticketCode: string;
+  orderId: string;
+  ticketType: "vip" | "reguler";
+  name: string;
+  whatsapp: string;
+  presence: "waiting" | "present" | "absent";
+};

@@ -2,7 +2,7 @@ import { count, sql, and, gte, lte } from "drizzle-orm";
 import { NextRequest, NextResponse } from "next/server";
 import db from "@/db";
 import { events as eventsDb } from "@/db/schema/public";
-import { loadEventSearchParams } from "./searchParams";
+import { loadEventSearchParams } from "../../lib/searchParams";
 
 export async function GET(request: NextRequest) {
   try {

@@ -39,6 +39,20 @@ const crons = () => {
     } catch (error) {
       console.error("Error in generateCertificateCronJob", error);
     }
+
+    try {
+      const absenceTicketResponse = await fetch(
+        `${process.env.BASE_URL}/api/tickets`,
+        {
+          method: "PUT",
+        },
+      );
+
+      const json = await absenceTicketResponse.json();
+      console.log(json);
+    } catch (error) {
+      console.error(error);
+    }
   });
 };
 

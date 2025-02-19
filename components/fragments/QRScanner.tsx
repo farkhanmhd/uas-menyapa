@@ -1,6 +1,5 @@
 "use client";
 
-import { useParams } from "next/navigation";
 import { useAction } from "next-safe-action/hooks";
 import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";

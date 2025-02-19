@@ -5,7 +5,7 @@ import EventListSkeleton from "@/components/fragments/EventListSkeleton";
 
 export default async function Home() {
   return (
-    <div className="container mx-auto px-4">
+    <div className="container mx-auto mt-6 px-4">
       <Jumbotron />
       <Suspense fallback={<EventListSkeleton />}>
         <EventCarousel />

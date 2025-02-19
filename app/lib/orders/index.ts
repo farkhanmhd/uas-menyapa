@@ -1,5 +1,5 @@
 import { eq } from "drizzle-orm";
-import { OrderStatus } from "@/app/api/events/searchParams";
+import { OrderStatus } from "@/app/lib/searchParams";
 import { OrderCard } from "@/types";
 import { PaymentData } from "@/utils/paymentUtils";
 import db from "@/db";

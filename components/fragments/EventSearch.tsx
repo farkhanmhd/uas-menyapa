@@ -2,7 +2,7 @@
 
 import { ChangeEvent } from "react";
 import { useQueryStates } from "nuqs";
-import { eventSearchParams } from "@/app/api/events/searchParams";
+import { eventSearchParams } from "@/app/lib/searchParams";
 import { Input } from "@/components/ui/input";
 import { parseDate } from "@internationalized/date";
 import { DatePickerRange } from "./DatePickerRange";
@@ -38,8 +38,8 @@ export default function EventSearch() {
 
   return (
     <form>
-      <div className="grid grid-cols-1 flex-wrap gap-4 md:grid-cols-3">
-        <div className="min-w-[200px] flex-1 space-y-2 md:col-span-2">
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+        <div className="min-w-[200px] space-y-2 lg:col-span-2">
           <Input
             id="search"
             placeholder="Cari Event..."
@@ -48,7 +48,7 @@ export default function EventSearch() {
             autoComplete="off"
           />
         </div>
-        <div className="min-w-[200px] flex-1 space-y-2">
+        <div className="min-w-[200px] space-y-2">
           <DatePickerRange
             value={{ start: parseDate(start), end: parseDate(end) }}
             setValue={handleDateChange}

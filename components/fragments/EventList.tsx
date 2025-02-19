@@ -4,7 +4,7 @@ import { getEvents } from "@/app/lib/events";
 import type { EventList } from "@/types";
 import { PageNavigation } from "./Pagination";
 import { NoEvents } from "./NoEvents";
-import { EventSearchParams } from "@/app/api/events/searchParams";
+import { EventSearchParams } from "@/app/lib/searchParams";
 
 type EventListProps = {
   searchParams: EventSearchParams;
@@ -19,7 +19,7 @@ export async function EventList({ searchParams }: EventListProps) {
         {events.length > 0 ? (
           <MapItems
             of={events}
-            render={(event, index) => <EventCard key={index} {...event} />}
+            render={(event, index) => <EventCard key={index} event={event} />}
           />
         ) : (
           <NoEvents />

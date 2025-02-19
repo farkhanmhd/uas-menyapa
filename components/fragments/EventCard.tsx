@@ -2,14 +2,19 @@
 
 import React from "react";
 import Image from "next/image";
-import { Link, useTransitionRouter } from "next-view-transitions";
+import { Link } from "next-view-transitions";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { IEventCard } from "@/types";
 import { EventTime } from "./EventTime";
 import { CalendarIcon, MapPinIcon } from "lucide-react";
+import { useTransitionRouter } from "next-view-transitions";
 
-export function EventCard({ ...event }: IEventCard) {
+type Props = {
+  event: IEventCard;
+};
+
+export function EventCard({ event }: Props) {
   const { push } = useTransitionRouter();
   return (
     <Card
@@ -47,9 +52,11 @@ export function EventCard({ ...event }: IEventCard) {
             </span>
           </div>
         </div>
-        <Link href={`/events/${event.id}`}>
-          <Button>View Details</Button>
-        </Link>
+        <div className="flex w-full items-center gap-x-4">
+          <Link href={`/events/${event.id}`}>
+            <Button>View Details</Button>
+          </Link>
+        </div>
       </CardFooter>
     </Card>
   );

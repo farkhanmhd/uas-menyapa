@@ -47,3 +47,19 @@ export const checkAdminOrSuperAdmin = async () => {
 
   return isAdminOrSuperadmin;
 };
+
+export const checkRole = async () => {
+  const session = await auth();
+  const userId = session?.user?.id;
+  const userDb = await db
+    .select({ userRole: users.role })
+    .from(users)
+    .where(eq(users.id, userId as string))
+    .limit(1);
+
+  if (userDb.length === 0) redirect("/");
+
+  const role = userDb[0].userRole;
+
+  return role;
+};
