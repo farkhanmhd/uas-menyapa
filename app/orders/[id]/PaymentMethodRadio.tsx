@@ -1,7 +1,7 @@
 "use client";
 
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import Image from "next/image";
+
 import { useId } from "react";
 
 const paymentMethods = [
@@ -91,7 +91,7 @@ export default function PaymentMethodRadio({
             className="sr-only after:absolute after:inset-0"
           />
           <div className="relative flex h-10 w-full items-center justify-center">
-            <Image
+            <img
               src={method.logo || "/placeholder.svg"}
               alt={method.name}
               width={method.width}

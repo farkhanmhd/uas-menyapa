@@ -12,7 +12,6 @@ export const createOrderAction = actionClient
 
       return { status, data, message };
     } catch (error) {
-      console.log(error);
       return {
         status: "error",
         message:

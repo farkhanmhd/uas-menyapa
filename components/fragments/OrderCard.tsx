@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Link from "next/link";
 import type { OrderCard as OrderCardProps } from "@/types";
 import { Badge } from "@/components/ui/badge";
@@ -14,7 +13,7 @@ const OrderCard = ({ ...order }: OrderCardProps) => {
         className="grid grid-cols-8 md:grid-cols-6"
       >
         <div className="hidden w-full md:col-span-2 md:block">
-          <Image
+          <img
             src={order.posterUrl || "/placeholder.svg"}
             alt={order.title}
             width={500}

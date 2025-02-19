@@ -72,11 +72,7 @@ export async function POST(req: NextRequest) {
           revalidatePath(`/events/${eventId}`);
           revalidatePath("/tickets");
           revalidatePath("/purchases");
-
-          console.log(`${orderQty} tickets generated for order ${order_id}`);
         });
-
-        console.log(`Transaction completed for order ${order_id}`);
       } catch (error) {
         console.error(`Transaction failed for order ${order_id}:`, error);
       }
@@ -127,10 +123,6 @@ export async function POST(req: NextRequest) {
           // Revalidate relevant paths
           revalidatePath("/orders");
           revalidatePath(`/events/${eventId}`);
-
-          console.log(
-            `Order ${order_id} marked as 'Cancelled', and availability updated.`,
-          );
         });
       } catch (error) {
         console.error(

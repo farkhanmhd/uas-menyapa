@@ -80,8 +80,6 @@ export async function GET(req: NextRequest, segmentData: { params: Params }) {
       vipAvailability: event.vipAvailability,
     };
 
-    console.log(event);
-
     // Parse questions and answers arrays into an array of Question objects
     let questions: { question: string; answer: string }[] = [];
     try {

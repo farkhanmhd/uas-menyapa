@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import Image from "next/image";
+
 import { Link } from "next-view-transitions";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
@@ -24,10 +24,9 @@ export function EventCard({ event }: Props) {
     >
       <CardContent className="p-0">
         <div className="relative aspect-[10/12] w-full">
-          <Image
+          <img
             src={event.posterUrl || "/placeholder.svg"}
             alt={event.title}
-            fill
             className="object-cover"
           />
         </div>

@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import Image from "next/image";
+
 import { Link, useTransitionRouter } from "next-view-transitions";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
@@ -19,10 +19,9 @@ export function CardCarousel({ ...event }: IEventCard) {
     >
       <CardContent className="p-0">
         <div className="relative aspect-[10/12] h-full w-full">
-          <Image
+          <img
             src={event.posterUrl || "/placeholder.svg"}
             alt={event.title}
-            fill
             className="h-full w-full object-cover"
           />
         </div>

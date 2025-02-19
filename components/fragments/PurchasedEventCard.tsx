@@ -1,4 +1,3 @@
-import Image from "next/image";
 import { Link } from "next-view-transitions";
 import { Card, CardContent } from "@/components/ui/card";
 import { EventTime } from "./EventTime";
@@ -12,7 +11,7 @@ export function PurchasedEventCard({ ...event }: PurchasedEvent) {
         className="grid grid-cols-8 md:grid-cols-6"
       >
         <div className="hidden w-full md:col-span-2 md:block">
-          <Image
+          <img
             src={event.posterUrl || "/placeholder.svg"}
             alt={event.title}
             width={300}

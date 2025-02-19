@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useCallback, useState, useId } from "react";
-import Image from "next/image";
 import { useDropzone } from "react-dropzone";
 import { Upload, Trash, File, FilePenLine } from "lucide-react";
 import { Label } from "@/components/ui/label";
@@ -95,7 +94,7 @@ const ImageUploadDropzone: React.FC<Props> = ({
           </>
         ) : (
           <div className="group relative w-full">
-            <Image
+            <img
               src={imageSrc!}
               alt="Uploaded"
               className="h-auto w-full rounded-lg"

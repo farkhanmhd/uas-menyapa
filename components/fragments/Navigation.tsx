@@ -1,7 +1,7 @@
 "use client";
 
 import { Link } from "next-view-transitions";
-import Image from "next/image";
+
 import {
   Home,
   Calendar,
@@ -68,7 +68,7 @@ export default function Navigation({ user, role }: Props) {
         <div className="container mx-auto flex items-center justify-between px-4">
           <div>
             <Link href="/">
-              <Image src="/logo.png" alt="Logo" width={40} height={40} />
+              <img src="/logo.png" alt="Logo" width={40} height={40} />
             </Link>
           </div>
           <div className="flex items-center gap-x-6">

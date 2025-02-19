@@ -14,8 +14,6 @@ export const PUT = async () => {
 
     revalidatePath("/orders");
 
-    console.log('Revalidated path at "/orders" ');
-
     return NextResponse.json({ message: "Orders updated successfully" });
   } catch (error) {
     console.error("Error updating orders:", error);

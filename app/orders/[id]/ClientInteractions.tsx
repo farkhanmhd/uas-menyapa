@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import { Link } from "next-view-transitions";
 import { Button } from "@/components/ui/button";
 import { CountdownTimer } from "./CountdownTimer";
@@ -104,10 +103,9 @@ export function ClientInteractions({
           <div className="space-y-6">
             <div className="flex justify-center">
               <div className="relative aspect-square w-full max-w-[240px]">
-                <Image
+                <img
                   src={actions[0].url || "/placeholder.svg"}
                   alt={`${paymentType} QR Code ${actions[0].url}`}
-                  fill
                   className="object-contain"
                 />
               </div>

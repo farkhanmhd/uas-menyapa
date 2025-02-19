@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import { EventTime } from "@/components/fragments/EventTime";
 import type { IEvent } from "@/types";
 import Link from "next/link";
@@ -80,7 +79,7 @@ export function EventDetail({ props, verified, role }: Props) {
       <div className="top-[112px] col-auto md:col-span-5 lg:sticky lg:col-span-3 lg:self-start">
         <Card className="overflow-hidden">
           <CardContent className="p-0">
-            <Image
+            <img
               src={props.posterUrl || "/placeholder.svg"}
               alt={props.title}
               width={400}

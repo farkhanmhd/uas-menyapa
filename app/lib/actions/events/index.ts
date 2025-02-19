@@ -108,7 +108,6 @@ async function createEvent(data: z.infer<typeof createEventSchema>) {
 
       // Insert event data into events table.
       await tx.insert(events).values(eventInsert);
-      console.log("successfully created event");
 
       // Since MySQL does not support .returning(), query the last inserted event.
       // (Assuming no concurrent inserts; otherwise, use a unique field)
@@ -128,7 +127,6 @@ async function createEvent(data: z.infer<typeof createEventSchema>) {
           answer: q.answer,
         });
       }
-      console.log("successfully created event question");
 
       const eventPriceInsert: EventPriceInsert = {
         eventId,
@@ -139,8 +137,6 @@ async function createEvent(data: z.infer<typeof createEventSchema>) {
       // Insert pricing information into eventPrice table
       await tx.insert(eventPrice).values(eventPriceInsert);
 
-      console.log("successfully created event price");
-
       const eventAvailabilityInsert: EventAvailabilityInsert = {
         eventId,
         vipAvailability: data.vipAvailability,
@@ -148,8 +144,6 @@ async function createEvent(data: z.infer<typeof createEventSchema>) {
       };
 
       await tx.insert(eventAvailability).values(eventAvailabilityInsert);
-
-      console.log("successfully created event availability");
 
       return { data: insertedEvent };
     });
