@@ -12,7 +12,7 @@ export default function Footer() {
                 Contact
               </h3>
               <p className="text-sm text-green-foreground">
-                Email: info@uasmenyapa.com
+                Email: uasmenyapa@gmail.com
                 <br />
                 Phone: (123) 456-7890
               </p>
