@@ -38,7 +38,7 @@ export default async function EventsPage({ searchParams }: PageProps) {
             <div className="w-full flex-1">
               <EventSearch />
             </div>
-            {session?.user && role !== "superadmin" && (
+            {session?.user && role !== "customer" && (
               <Link className={cn(buttonVariants())} href="/events/create">
                 Create Event
               </Link>
