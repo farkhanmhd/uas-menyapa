@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { formatCurrency } from "@/lib/utils";
 import { EventTime } from "./EventTime";
+import Image from "next/image";
 
 const OrderCard = ({ ...order }: OrderCardProps) => {
   return (
@@ -13,7 +14,7 @@ const OrderCard = ({ ...order }: OrderCardProps) => {
         className="grid grid-cols-8 md:grid-cols-6"
       >
         <div className="hidden w-full md:col-span-2 md:block">
-          <img
+          <Image
             src={order.posterUrl || "/placeholder.svg"}
             alt={order.title}
             width={500}

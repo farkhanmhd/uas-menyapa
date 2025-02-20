@@ -9,6 +9,7 @@ import { IEventCard } from "@/types";
 import { EventTime } from "./EventTime";
 import { CalendarIcon, MapPinIcon } from "lucide-react";
 import { useTransitionRouter } from "next-view-transitions";
+import Image from "next/image";
 
 type Props = {
   event: IEventCard;
@@ -24,9 +25,10 @@ export function EventCard({ event }: Props) {
     >
       <CardContent className="p-0">
         <div className="relative aspect-[10/12] w-full">
-          <img
+          <Image
             src={event.posterUrl || "/placeholder.svg"}
             alt={event.title}
+            fill
             className="object-cover"
           />
         </div>

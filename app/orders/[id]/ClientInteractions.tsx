@@ -6,6 +6,7 @@ import { CountdownTimer } from "./CountdownTimer";
 import { ClipboardCopy, Ticket } from "lucide-react";
 import { PiWhatsappLogo } from "react-icons/pi";
 import { toast } from "@/hooks/use-toast";
+import Image from "next/image";
 
 interface ClientInteractionsProps {
   paymentType: string;
@@ -103,9 +104,10 @@ export function ClientInteractions({
           <div className="space-y-6">
             <div className="flex justify-center">
               <div className="relative aspect-square w-full max-w-[240px]">
-                <img
+                <Image
                   src={actions[0].url || "/placeholder.svg"}
                   alt={`${paymentType} QR Code ${actions[0].url}`}
+                  fill
                   className="object-contain"
                 />
               </div>

@@ -45,7 +45,7 @@ var crons = function () {
     console.log("Starting cron jobs");
     // expire orders
     cron.schedule("* * * * *", function () { return __awaiter(void 0, void 0, void 0, function () {
-        var expireOrderResponse, json, error_1, generateCertificateRespons, json, error_2;
+        var expireOrderResponse, json, error_1, generateCertificateRespons, json, error_2, absenceTicketResponse, json, error_3;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -84,7 +84,23 @@ var crons = function () {
                     error_2 = _a.sent();
                     console.error("Error in generateCertificateCronJob", error_2);
                     return [3 /*break*/, 9];
-                case 9: return [2 /*return*/];
+                case 9:
+                    _a.trys.push([9, 12, , 13]);
+                    return [4 /*yield*/, fetch("".concat(process.env.BASE_URL, "/api/tickets"), {
+                            method: "PUT",
+                        })];
+                case 10:
+                    absenceTicketResponse = _a.sent();
+                    return [4 /*yield*/, absenceTicketResponse.json()];
+                case 11:
+                    json = _a.sent();
+                    console.log(json);
+                    return [3 /*break*/, 13];
+                case 12:
+                    error_3 = _a.sent();
+                    console.error(error_3);
+                    return [3 /*break*/, 13];
+                case 13: return [2 /*return*/];
             }
         });
     }); });

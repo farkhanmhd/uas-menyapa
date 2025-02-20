@@ -17,12 +17,17 @@ import {
   EventAvailability,
 } from "@/db/schema/public";
 import { auth } from "@/auth";
-
-// Import Node.js modules for file handling
-import fs from "fs/promises";
-import path from "path";
 import { revalidatePath, revalidateTag } from "next/cache";
 import { format } from "date-fns";
+
+// Cloudinary integration
+import { v2 as cloudinary } from "cloudinary";
+
+cloudinary.config({
+  cloud_name: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.NEXT_PUBLIC_CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 
 const questionSchema = z.object({
   question: z.string().min(1, "Question is required"),
@@ -34,7 +39,7 @@ const fileSchema = z.custom<File>(
   "Please upload a valid image file",
 );
 
-// Define a schema that accepts either a File or a string
+// Accept either a File or a string URL
 const fileOrStringSchema = z.union([fileSchema, z.string()]);
 
 const createEventSchema = z.object({
@@ -62,15 +67,20 @@ const createEventSchema = z.object({
   questions: z.array(questionSchema).min(1).max(5),
 });
 
-const saveFile = async (file: File, prefix: string) => {
-  const publicDir = path.join(process.cwd(), "public", "images");
-  await fs.mkdir(publicDir, { recursive: true });
-  const fileName = `${prefix}-${Date.now()}-${file.name}`;
-  const filePath = path.join(publicDir, fileName);
-  // Convert File to Buffer
+// New helper: Upload a file to Cloudinary and return the secure URL
+const uploadToCloudinary = async (file: File, prefix: string) => {
+  // Convert the file to a Buffer then to a base64 data URI
   const buffer = Buffer.from(await file.arrayBuffer());
-  await fs.writeFile(filePath, buffer);
-  return `/images/${fileName}`;
+  const base64 = buffer.toString("base64");
+  const dataUri = `data:${file.type};base64,${base64}`;
+
+  // Upload to Cloudinary; adjust folder or public_id as needed
+  const result = await cloudinary.uploader.upload(dataUri, {
+    folder: "events", // All event images will be stored in the 'events' folder
+    public_id: `${prefix}-${Date.now()}`,
+    overwrite: true,
+  });
+  return result.secure_url;
 };
 
 async function createEvent(data: z.infer<typeof createEventSchema>) {
@@ -78,16 +88,16 @@ async function createEvent(data: z.infer<typeof createEventSchema>) {
   if (!session?.user) {
     throw new Error("Unauthorized");
   }
-  // Define the public images folder (Next.js public/images)
-
-  // Helper: Save a file and return its relative URL.
 
   try {
     const transaction = await db.transaction(async (tx) => {
-      // Upload files and get URLs
-      const posterUrl = await saveFile(data.posterImage, "poster");
-      const ticketUrl = await saveFile(data.ticketDesignImage, "ticket");
-      const certificateUrl = await saveFile(
+      // Upload images to Cloudinary and get their URLs
+      const posterUrl = await uploadToCloudinary(data.posterImage, "poster");
+      const ticketUrl = await uploadToCloudinary(
+        data.ticketDesignImage,
+        "ticket",
+      );
+      const certificateUrl = await uploadToCloudinary(
         data.certificateImage,
         "certificate",
       );
@@ -97,20 +107,19 @@ async function createEvent(data: z.infer<typeof createEventSchema>) {
         description: data.description,
         venue: data.venue,
         city: data.city,
-        startTime: format(data.startTime, "yyyy-MM-dd HH:mm:ss"),
-        endTime: format(data.endTime, "yyyy-MM-dd HH:mm:ss"),
+        startTime: format(new Date(data.startTime), "yyyy-MM-dd HH:mm:ss"),
+        endTime: format(new Date(data.endTime), "yyyy-MM-dd HH:mm:ss"),
         gmapUrl: data.gmapUrl as string,
         whatsappGroupUrl: data.whatsappGroupUrl,
-        posterUrl: posterUrl, // store file URL
+        posterUrl, // Cloudinary URL
         ticketDesignUrl: ticketUrl,
-        certificateDesignUrl: certificateUrl as string, // store file URL
+        certificateDesignUrl: certificateUrl,
       };
 
-      // Insert event data into events table.
+      // Insert event data
       await tx.insert(events).values(eventInsert);
 
-      // Since MySQL does not support .returning(), query the last inserted event.
-      // (Assuming no concurrent inserts; otherwise, use a unique field)
+      // Query the last inserted event (assumes no concurrent inserts)
       const insertedEvents = await tx
         .select()
         .from(events)
@@ -119,7 +128,7 @@ async function createEvent(data: z.infer<typeof createEventSchema>) {
       const insertedEvent = insertedEvents[0];
       const eventId = insertedEvent.id;
 
-      // Insert each question into eventQuestions table
+      // Insert event questions
       for (const q of data.questions) {
         await tx.insert(eventQuestions).values({
           eventId,
@@ -131,10 +140,10 @@ async function createEvent(data: z.infer<typeof createEventSchema>) {
       const eventPriceInsert: EventPriceInsert = {
         eventId,
         reguler: data.regularPrice,
-        vip: data.regularPrice,
+        vip: data.vipPrice,
       };
 
-      // Insert pricing information into eventPrice table
+      // Insert pricing data
       await tx.insert(eventPrice).values(eventPriceInsert);
 
       const eventAvailabilityInsert: EventAvailabilityInsert = {
@@ -143,6 +152,7 @@ async function createEvent(data: z.infer<typeof createEventSchema>) {
         regulerAvailability: data.regularAvailability,
       };
 
+      // Insert availability data
       await tx.insert(eventAvailability).values(eventAvailabilityInsert);
 
       return { data: insertedEvent };
@@ -165,7 +175,7 @@ export const createEventAction = actionClient
       revalidateTag("events-home");
       return {
         status: "success",
-        message: `Event data created successfully`,
+        message: "Event data created successfully",
       };
     } catch (error) {
       return {
@@ -175,7 +185,7 @@ export const createEventAction = actionClient
     }
   });
 
-// ------------------------- Updated editEventAction below -------------------------
+// ------------------------- Updated editEventAction -------------------------
 
 const editEventSchema = z.object({
   id: z.string().min(1, "Event id required"),
@@ -187,7 +197,7 @@ const editEventSchema = z.object({
   endTime: z.string().optional(),
   gmapUrl: z.string().url().optional(),
   whatsappGroupUrl: z.string().url().optional(),
-  // Accept a File or a string URL
+  // Accept either a File or a string URL for images
   posterImage: fileOrStringSchema.optional(),
   ticketDesignImage: fileOrStringSchema.optional(),
   certificateImage: fileOrStringSchema.optional(),
@@ -227,17 +237,20 @@ async function editEvent(data: z.infer<typeof editEventSchema>) {
   if (data.whatsappGroupUrl)
     updateData.whatsappGroupUrl = data.whatsappGroupUrl;
 
-  // Process image fields: if a File, upload it; otherwise use given string URL
+  // Process image fields: if a File, upload to Cloudinary; otherwise use the provided URL
   if (data.posterImage) {
     if (data.posterImage instanceof File) {
-      updateData.posterUrl = await saveFile(data.posterImage, "poster");
+      updateData.posterUrl = await uploadToCloudinary(
+        data.posterImage,
+        "poster",
+      );
     } else if (typeof data.posterImage === "string") {
       updateData.posterUrl = data.posterImage;
     }
   }
   if (data.ticketDesignImage) {
     if (data.ticketDesignImage instanceof File) {
-      updateData.ticketDesignUrl = await saveFile(
+      updateData.ticketDesignUrl = await uploadToCloudinary(
         data.ticketDesignImage,
         "ticket",
       );
@@ -247,7 +260,7 @@ async function editEvent(data: z.infer<typeof editEventSchema>) {
   }
   if (data.certificateImage) {
     if (data.certificateImage instanceof File) {
-      updateData.certificateDesignUrl = await saveFile(
+      updateData.certificateDesignUrl = await uploadToCloudinary(
         data.certificateImage,
         "certificate",
       );
@@ -291,9 +304,6 @@ async function editEvent(data: z.infer<typeof editEventSchema>) {
     }
   }
 
-  revalidatePath("/events");
-  revalidateTag("event-detail");
-
   return { status: "success", message: "Event updated successfully" };
 }
 
@@ -302,6 +312,8 @@ export const editEventAction = actionClient
   .action(async ({ parsedInput }) => {
     try {
       await editEvent(parsedInput);
+      revalidatePath("/events");
+      revalidateTag("event-detail");
       return { status: "success", message: "Event updated successfully" };
     } catch (error) {
       return { status: "error", error: "Failed to update event" };

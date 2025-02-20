@@ -1,7 +1,7 @@
 "use client";
 
 import { useTransitionRouter } from "next-view-transitions";
-
+import Image from "next/image";
 import CertificateDownloader from "./certificate-downloader";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -40,11 +40,13 @@ export default function Certificate({
         </CardHeader>
         <CardContent>
           <div className="relative mb-6 aspect-[3507/2480] w-full overflow-hidden rounded-lg shadow-lg">
-            <img
+            <Image
               src={certificate.certificateImage}
               alt={`${certificate.eventTitle} Certificate for ${certificate.name}`}
+              fill
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 70vw"
               className="object-contain"
+              priority
             />
             <div className="absolute inset-0 flex">
               <div

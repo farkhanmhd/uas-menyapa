@@ -15,6 +15,7 @@ import {
 import { Button, buttonVariants } from "@/components/ui/button";
 import CheckoutSection from "./checkout-section";
 import EventFAQ from "./event-faq";
+import Image from "next/image";
 
 type Props = {
   props: IEvent;
@@ -79,7 +80,7 @@ export function EventDetail({ props, verified, role }: Props) {
       <div className="top-[112px] col-auto md:col-span-5 lg:sticky lg:col-span-3 lg:self-start">
         <Card className="overflow-hidden">
           <CardContent className="p-0">
-            <img
+            <Image
               src={props.posterUrl || "/placeholder.svg"}
               alt={props.title}
               width={400}

@@ -6,6 +6,7 @@ import { Upload, Trash, File, FilePenLine } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import Image from "next/image";
 
 type Props = {
   label?: string;
@@ -94,7 +95,7 @@ const ImageUploadDropzone: React.FC<Props> = ({
           </>
         ) : (
           <div className="group relative w-full">
-            <img
+            <Image
               src={imageSrc!}
               alt="Uploaded"
               className="h-auto w-full rounded-lg"

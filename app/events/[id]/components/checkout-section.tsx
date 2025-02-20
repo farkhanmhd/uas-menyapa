@@ -259,7 +259,10 @@ export default function CheckoutSection({
                     : regulerAvailability === 0,
               }))}
               value={variant}
-              onChange={(value) => setVariant(value as TicketVariant)}
+              onChange={(value) => {
+                setVariant(value as TicketVariant);
+                setQuantity(1);
+              }}
               label="Tipe Tiket"
             />
             <div className="flex items-center justify-between">

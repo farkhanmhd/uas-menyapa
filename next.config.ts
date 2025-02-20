@@ -9,6 +9,7 @@ const nextConfig: NextConfig = {
     },
   },
   images: {
+    unoptimized: true,
     remotePatterns: [
       {
         protocol: "https",
@@ -22,16 +23,9 @@ const nextConfig: NextConfig = {
         pathname: "/v2/**",
       },
       {
-        protocol: "http",
-        hostname: "**",
-        port: "",
-        pathname: "**",
-      },
-      {
         protocol: "https",
-        hostname: "**",
-        port: "",
-        pathname: "**",
+        hostname: "api.midtrans.com",
+        pathname: "/v2/**",
       },
     ],
     path: "/",

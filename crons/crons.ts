@@ -10,7 +10,7 @@ const crons = () => {
   // expire orders
   cron.schedule("0 * * * *", async () => {
     // Run every minute
-    console.log("Running cron job to expire all orders for every minute");
+    console.log("Running cron job for every hour");
 
     try {
       const expireOrderResponse = await fetch(

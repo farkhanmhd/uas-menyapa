@@ -33,6 +33,7 @@ import {
 import { Button } from "../ui/button";
 import { useActionState } from "react";
 import { logoutAction } from "@/app/lib/auth";
+import Image from "next/image";
 
 type Props = {
   user: any;
@@ -68,7 +69,7 @@ export default function Navigation({ user, role }: Props) {
         <div className="container mx-auto flex items-center justify-between px-4">
           <div>
             <Link href="/">
-              <img src="/logo.png" alt="Logo" width={40} height={40} />
+              <Image src="/logo.png" alt="Logo" width={40} height={40} />
             </Link>
           </div>
           <div className="flex items-center gap-x-6">

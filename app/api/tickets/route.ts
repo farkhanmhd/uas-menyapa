@@ -7,7 +7,6 @@ import {
   loadPurchasedEventsSearchParams,
   PurchasedStatus,
 } from "../../lib/searchParams";
-import { format } from "date-fns";
 
 export const GET = async (req: NextRequest) => {
   try {
@@ -68,10 +67,7 @@ export const PUT = async () => {
         .update(tickets)
         .set({ presence: "present" })
         .where(
-          and(
-            eq(tickets.presence, "waiting"),
-            lt(events.endTime, format(new Date(), "yyyy-MM-dd HH:mm:ss")),
-          ),
+          and(eq(tickets.presence, "waiting"), lt(events.endTime, sql`NOW()`)),
         );
 
       return result[0].affectedRows;

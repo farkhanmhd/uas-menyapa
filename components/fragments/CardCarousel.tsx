@@ -8,6 +8,7 @@ import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { IEventCard } from "@/types";
 import { CalendarIcon, MapPinIcon } from "lucide-react";
 import { EventTime } from "./EventTime";
+import Image from "next/image";
 
 export function CardCarousel({ ...event }: IEventCard) {
   const { push } = useTransitionRouter();
@@ -19,9 +20,10 @@ export function CardCarousel({ ...event }: IEventCard) {
     >
       <CardContent className="p-0">
         <div className="relative aspect-[10/12] h-full w-full">
-          <img
+          <Image
             src={event.posterUrl || "/placeholder.svg"}
             alt={event.title}
+            fill
             className="h-full w-full object-cover"
           />
         </div>

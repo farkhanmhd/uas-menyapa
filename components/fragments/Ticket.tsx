@@ -9,6 +9,7 @@ import { toPng } from "html-to-image";
 import { EventTime } from "./EventTime";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import type { Ticket as TicketType } from "@/types";
+import Image from "next/image";
 
 const Ticket: React.FC<{ ticket: TicketType }> = ({ ticket }) => {
   const ticketRef = useRef<HTMLDivElement>(null);
@@ -39,6 +40,8 @@ const Ticket: React.FC<{ ticket: TicketType }> = ({ ticket }) => {
     }
   };
 
+  console.log(ticket.ticketDesign);
+
   return (
     <div className="flex w-full flex-col items-center space-y-4">
       <div className="px-0 sm:px-4">
@@ -46,14 +49,15 @@ const Ticket: React.FC<{ ticket: TicketType }> = ({ ticket }) => {
           <div className="flex justify-center">
             <Card
               ref={ticketRef}
-              className="h-[679px] w-[382px] overflow-hidden rounded-lg"
-              style={{
-                backgroundImage: `url(${ticket.ticketDesign})`,
-                backgroundSize: "cover",
-                backgroundPosition: "top center",
-              }}
+              className="relative h-[679px] w-[382px] overflow-hidden rounded-lg bg-transparent"
             >
-              <CardContent className="flex h-full flex-col justify-end p-0">
+              <Image
+                src={ticket.ticketDesign}
+                alt="ticket design"
+                className="absolute inset-0 z-0 object-cover"
+                fill
+              />
+              <CardContent className="relative z-10 flex h-full flex-col justify-end bg-transparent p-0">
                 <div className="space-y-4">
                   <div className="mx-8 mt-4 flex flex-col items-center space-y-2 border-b border-dashed border-gray-200 px-6 pb-3">
                     <div className="rounded-md p-2 shadow-sm">
