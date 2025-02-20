@@ -11,6 +11,8 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Link } from "next-view-transitions";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { checkRole } from "../lib";
+import { auth } from "@/auth";
 
 type PageProps = {
   searchParams: Promise<SearchParams>;
@@ -19,6 +21,13 @@ type PageProps = {
 export default async function EventsPage({ searchParams }: PageProps) {
   const { start, end, search, page, limit } =
     await loadEventSearchParams(searchParams);
+
+  const session = await auth();
+  let role: "customer" | "admin" | "superadmin" = "customer";
+
+  if (session?.user) {
+    role = await checkRole();
+  }
 
   return (
     <div className="container mx-auto mt-6 flex h-full flex-1 flex-col px-4 lg:mt-0">
@@ -29,9 +38,11 @@ export default async function EventsPage({ searchParams }: PageProps) {
             <div className="w-full flex-1">
               <EventSearch />
             </div>
-            <Link className={cn(buttonVariants())} href="/events/create">
-              Create Event
-            </Link>
+            {session?.user && role !== "superadmin" && (
+              <Link className={cn(buttonVariants())} href="/events/create">
+                Create Event
+              </Link>
+            )}
           </div>
         </div>
         <Suspense fallback={<EventListSkeleton />}>
