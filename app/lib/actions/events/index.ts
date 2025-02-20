@@ -21,9 +21,9 @@ import { revalidatePath, revalidateTag } from "next/cache";
 import { format } from "date-fns";
 
 // Cloudinary integration
-import { v2 as cloudinary } from "cloudinary";
+import cloudinary from "cloudinary";
 
-cloudinary.config({
+cloudinary.v2.config({
   cloud_name: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
   api_key: process.env.NEXT_PUBLIC_CLOUDINARY_API_KEY,
   api_secret: process.env.CLOUDINARY_API_SECRET,
@@ -75,7 +75,7 @@ const uploadToCloudinary = async (file: File, prefix: string) => {
   const dataUri = `data:${file.type};base64,${base64}`;
 
   // Upload to Cloudinary; adjust folder or public_id as needed
-  const result = await cloudinary.uploader.upload(dataUri, {
+  const result = await cloudinary.v2.uploader.upload(dataUri, {
     folder: "events", // All event images will be stored in the 'events' folder
     public_id: `${prefix}-${Date.now()}`,
     overwrite: true,
