@@ -151,21 +151,7 @@ export default function CheckoutSection({
     checkScreenSize();
     window.addEventListener("resize", checkScreenSize);
 
-    const src = "https://api.midtrans.com/v2/assets/js/midtrans-new-3ds.min.js";
-    const clientKey = process.env.NEXT_PUBLIC_MIDTRANS_CLIENT_KEY;
-    const script = document.createElement("script");
-    script.setAttribute("id", "midtrans-script");
-    script.src = src;
-    script.setAttribute("data-client-key", clientKey as string);
-    script.setAttribute("data-environment", "production");
-    script.type = "text/javascript";
-    script.async = true;
-    document.body.appendChild(script);
-
-    return () => {
-      window.removeEventListener("resize", checkScreenSize);
-      document.body.removeChild(script);
-    };
+    return () => window.removeEventListener("resize", checkScreenSize);
   }, []);
 
   const selectedPrice = variant === "vip" ? vipPrice : regulerPrice;
@@ -212,7 +198,7 @@ export default function CheckoutSection({
       <h3 className="text-lg font-semibold">Order Summary</h3>
       <p className="flex justify-between">
         <span>Ticket Type: </span>
-        <span className="font-semibold">{variant.toUpperCase()}</span>{" "}
+        <span className="font-semibold uppercase">{variant}</span>{" "}
       </p>
       <p className="flex justify-between">
         <span>Quantity:</span>

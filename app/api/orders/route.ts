@@ -69,6 +69,7 @@ export const POST = async (req: NextRequest) => {
     const core = new midtransClient.CoreApi({
       isProduction: true,
       serverKey: process.env.MIDTRANS_SERVER_KEY,
+      clientKey: process.env.MIDTRANS_CLIENT_KEY,
     });
 
     const paymentType = {
