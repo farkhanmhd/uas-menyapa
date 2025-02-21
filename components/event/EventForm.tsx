@@ -181,6 +181,7 @@ export function EventForm({
               "border-destructive/80 text-destructive focus-visible:border-destructive/80 focus-visible:ring-destructive/20":
                 errors.descriptionError,
             })}
+            rows={20}
           />
           {errors.descriptionError && (
             <p className="text-xs text-destructive">

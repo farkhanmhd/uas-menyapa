@@ -135,9 +135,7 @@ export function EventDetail({ props, verified, role }: Props) {
                 </Link>
               )}
             </div>
-            <p className="text-sm text-muted-foreground md:text-base">
-              {props.description}
-            </p>
+            <p className="text-sm md:text-base">{props.description}</p>
             {eventStatus === "upcoming" &&
               props.vipAvailability + props.regulerAvailability <= 10 &&
               props.vipAvailability + props.regulerAvailability >= 1 && (
