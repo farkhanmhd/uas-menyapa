@@ -151,7 +151,21 @@ export default function CheckoutSection({
     checkScreenSize();
     window.addEventListener("resize", checkScreenSize);
 
-    return () => window.removeEventListener("resize", checkScreenSize);
+    const src = "https://api.midtrans.com/v2/assets/js/midtrans-new-3ds.min.js";
+    const clientKey = process.env.NEXT_PUBLIC_MIDTRANS_CLIENT_KEY;
+    const script = document.createElement("script");
+    script.setAttribute("id", "midtrans-script");
+    script.src = src;
+    script.setAttribute("data-client-key", clientKey as string);
+    script.setAttribute("data-environment", "production");
+    script.type = "text/javascript";
+    script.async = true;
+    document.body.appendChild(script);
+
+    return () => {
+      window.removeEventListener("resize", checkScreenSize);
+      document.body.removeChild(script);
+    };
   }, []);
 
   const selectedPrice = variant === "vip" ? vipPrice : regulerPrice;
