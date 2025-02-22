@@ -31,7 +31,7 @@ export const columns: ColumnDef<Attendee>[] = [
   },
   {
     accessorKey: "ticketType",
-    header: "Ticket Type",
+    header: () => <div className="line-clamp-1 max-w-max">Tipe Tiket</div>,
     cell: ({ row }) => {
       const type = row.getValue("ticketType") as string;
       return (

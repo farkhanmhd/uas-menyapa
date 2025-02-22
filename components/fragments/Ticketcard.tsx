@@ -17,9 +17,21 @@ import { updateParticipantAction } from "@/app/lib/actions/tickets";
 import { cn } from "@/lib/utils";
 import { useParams } from "next/navigation";
 import { ViewTicketDialog } from "./ViewTicketDialog";
+import {
+  AlertDialog,
+  AlertDialogTrigger,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogAction,
+  AlertDialogCancel,
+} from "@/components/ui/alert-dialog";
 
 export function TicketCard(props: Ticket) {
   const params = useParams();
+  const [isOpen, setIsOpen] = useState<boolean>(false);
   const { eventId } = params;
   const [name, setName] = useState(props.participantName || "");
   const [whatsapp, setWhatsapp] = useState(props.whatsappNumber || "");
@@ -67,17 +79,7 @@ export function TicketCard(props: Ticket) {
           {props.eventTitle}
         </h3>
         {!props.participantName && !props.whatsappNumber ? (
-          <form
-            className="space-y-6"
-            action={() =>
-              execute({
-                id: props.id,
-                eventId: eventId as string,
-                name,
-                whatsapp: `+62${whatsapp}`,
-              })
-            }
-          >
+          <form className="space-y-6">
             <div className="space-y-3">
               <Label
                 htmlFor={`name-${props.id}`}
@@ -107,10 +109,40 @@ export function TicketCard(props: Ticket) {
                   whatsappError,
               })}
             />
-
-            <Button type="submit" className="w-full" disabled={isPending}>
-              Submit
-            </Button>
+            <AlertDialog open={isOpen || isPending} onOpenChange={setIsOpen}>
+              <AlertDialogTrigger asChild>
+                <Button type="button" className="w-full">
+                  Submit
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent className="w-10/12 rounded-xl">
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Simpan Data Tiket</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    Pastikan nama yang Anda masukkan sudah benar, karena data
+                    ini akan digunakan untuk mencetak tiket dan sertifikat.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel disabled={isPending}>
+                    Cancel
+                  </AlertDialogCancel>
+                  <AlertDialogAction
+                    disabled={isPending}
+                    onClick={() =>
+                      execute({
+                        id: props.id,
+                        eventId: eventId as string,
+                        name,
+                        whatsapp: `+62${whatsapp}`,
+                      })
+                    }
+                  >
+                    Confirm
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
           </form>
         ) : (
           <div className="space-y-4">

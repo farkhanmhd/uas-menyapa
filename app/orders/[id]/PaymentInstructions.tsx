@@ -21,46 +21,46 @@ export function PaymentInstructions({ payment }: PaymentInstructionsProps) {
 
   const instructions = {
     "Virtual Account": [
-      `Log in to your ${paymentDetails.bank} mobile banking app or internet banking.`,
-      "Select 'Transfer' or 'Send Money'.",
-      `Choose 'Transfer to ${paymentDetails.bank} Virtual Account'.`,
-      `Enter the Virtual Account number: ${paymentDetails.number}`,
-      `Confirm the amount to pay: ${payment.payment_details.currency} ${payment.payment_details.grossAmount}`,
-      "Review the details and confirm the transaction.",
-      "Keep the transaction receipt for your records.",
+      `Masuk ke aplikasi mobile banking atau internet banking ${paymentDetails.bank} Anda.`,
+      "Pilih 'Transfer' atau 'Kirim Uang'.",
+      `Pilih 'Transfer ke Virtual Account ${paymentDetails.bank}'.`,
+      `Masukkan nomor Virtual Account: ${paymentDetails.number}`,
+      `Konfirmasi jumlah yang harus dibayar: ${payment.payment_details.currency} ${payment.payment_details.grossAmount}`,
+      "Periksa detail dan konfirmasi transaksi.",
+      "Simpan struk transaksi untuk catatan Anda.",
     ],
     "Mandiri Bill": [
-      "Log in to your Mandiri mobile banking app or internet banking.",
-      "Select 'Pay Bills' or 'Payments'.",
-      "Choose 'Multipayment'.",
-      `Enter the Biller Code: ${paymentDetails.billerCode}`,
-      `Enter the Bill Key: ${paymentDetails.billKey}`,
-      `Confirm the amount to pay: ${payment.payment_details.currency} ${payment.payment_details.grossAmount}`,
-      "Review the details and confirm the transaction.",
-      "Keep the transaction receipt for your records.",
+      "Masuk ke aplikasi mobile banking atau internet banking Mandiri Anda.",
+      "Pilih 'Bayar Tagihan' atau 'Pembayaran'.",
+      "Pilih 'Multipayment'.",
+      `Masukkan Kode Biller: ${paymentDetails.billerCode}`,
+      `Masukkan Bill Key: ${paymentDetails.billKey}`,
+      `Konfirmasi jumlah yang harus dibayar: ${payment.payment_details.currency} ${payment.payment_details.grossAmount}`,
+      "Periksa detail dan konfirmasi transaksi.",
+      "Simpan struk transaksi untuk catatan Anda.",
     ],
     QRIS: [
-      "Open your preferred e-wallet or banking app that supports QRIS.",
-      "Select the 'Scan QR' or 'Pay with QR' option.",
-      "Scan the QR code displayed on the screen.",
-      `Confirm the amount to pay: ${payment.payment_details.currency} ${payment.payment_details.grossAmount}`,
-      "Review the details and confirm the transaction.",
-      "Keep the transaction receipt for your records.",
+      "Buka aplikasi e-wallet atau bank yang mendukung QRIS pilihan Anda.",
+      "Pilih opsi 'Pindai QR' atau 'Bayar dengan QR'.",
+      "Pindai kode QR yang ditampilkan di layar.",
+      `Konfirmasi jumlah yang harus dibayar: ${payment.payment_details.currency} ${payment.payment_details.grossAmount}`,
+      "Periksa detail dan konfirmasi transaksi.",
+      "Simpan struk transaksi untuk catatan Anda.",
     ],
     GoPay: [
-      "Open your GoPay app.",
-      "Select 'Scan QR' or use the 'Pay' button.",
-      "Scan the QR code displayed on the screen or use the 'Open GoPay App' button.",
-      `Confirm the amount to pay: ${payment.payment_details.currency} ${payment.payment_details.grossAmount}`,
-      "Review the details and confirm the transaction.",
-      "Keep the transaction receipt for your records.",
+      "Buka aplikasi GoPay Anda.",
+      "Pilih 'Pindai QR' atau gunakan tombol 'Bayar'.",
+      "Pindai kode QR yang ditampilkan di layar atau gunakan tombol 'Buka Aplikasi GoPay'.",
+      `Konfirmasi jumlah yang harus dibayar: ${payment.payment_details.currency} ${payment.payment_details.grossAmount}`,
+      "Periksa detail dan konfirmasi transaksi.",
+      "Simpan struk transaksi untuk catatan Anda.",
     ],
   };
 
   return (
     <Card className="mx-auto mt-8 w-full max-w-5xl">
       <CardHeader>
-        <CardTitle>How to Pay</CardTitle>
+        <CardTitle>Cara melakukan Pembayaran</CardTitle>
       </CardHeader>
       <CardContent>
         <ol className="list-inside list-decimal space-y-2">

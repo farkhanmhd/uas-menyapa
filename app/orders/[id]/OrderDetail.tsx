@@ -9,6 +9,7 @@ import { Separator } from "@/components/ui/separator";
 import { PaymentStatusBanner } from "./PaymentStatusBanner";
 import { EventDetails } from "./EventDetails";
 import { formatCurrency } from "@/lib/utils";
+import { PaymentInstructions } from "./PaymentInstructions";
 
 interface OrderDetailProps {
   payment: PaymentData;
@@ -116,6 +117,7 @@ export function OrderDetail({ payment }: OrderDetailProps) {
           </div>
         </CardContent>
       </Card>
+      <PaymentInstructions payment={payment} />
     </div>
   );
 }

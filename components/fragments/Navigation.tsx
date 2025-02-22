@@ -10,6 +10,8 @@ import {
   User,
   UserCog,
   ScanLine,
+  Users,
+  LayoutDashboard,
 } from "lucide-react";
 import { MapItems } from "@/lib/utils";
 import { GoogleLoginDialog } from "@/components/fragments/google-login";
@@ -55,12 +57,23 @@ export default function Navigation({ user, role }: Props) {
     { href: "/purchases", label: "Purchases", icon: UserCog },
     { href: "/scan", label: "Scan", icon: ScanLine },
     { href: "/events", label: "Events", icon: Calendar },
-    { href: "/orders", label: "Orders", icon: Clipboard },
+    { href: "/account", label: "Account", icon: User },
+  ];
+  const superAdminNavItems = [
+    { href: "/", label: "Home", icon: Home },
+    { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
+    { href: "/purchases", label: "Purchases", icon: UserCog },
+    { href: "/users", label: "Users", icon: Users },
+    { href: "/events", label: "Events", icon: Calendar },
     { href: "/account", label: "Account", icon: User },
   ];
 
   const selectedNavItems =
-    role === "customer" ? customerNavItems : adminNavItems;
+    role === "customer"
+      ? customerNavItems
+      : role === "admin"
+        ? adminNavItems
+        : superAdminNavItems;
 
   return (
     <>

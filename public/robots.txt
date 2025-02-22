@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+
+Disallow: /orders
+Disallow: /scan
+Disallow: /tickets
+Disallow: /account
+
+Sitemap: https://uasmenyapa.com/sitemap.xml

@@ -31,14 +31,6 @@ export default function RootLayout({
             </SessionProvider>
           </ClientProvider>
         </body>
-        <script
-          defer
-          id="midtrans-script"
-          src="https://api.midtrans.com/v2/assets/js/midtrans-new-3ds.min.js"
-          data-environment="production"
-          data-client-key={process.env.NEXT_PUBLIC_MIDTRANS_CLIENT_KEY}
-          type="text/javascript"
-        ></script>
       </html>
     </ViewTransitions>
   );

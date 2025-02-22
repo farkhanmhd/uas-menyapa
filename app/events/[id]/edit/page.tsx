@@ -12,7 +12,7 @@ export default async function EditEventPage({ params }: PageProps) {
   await checkSession();
   const role = await checkRole();
 
-  if (role === "customer") redirect("/");
+  if (role !== "superadmin") redirect("/");
 
   const { id } = await params;
   return (

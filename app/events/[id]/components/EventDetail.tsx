@@ -1,5 +1,6 @@
 "use client";
 
+import React from "react";
 import { EventTime } from "@/components/fragments/EventTime";
 import type { IEvent } from "@/types";
 import Link from "next/link";
@@ -129,13 +130,23 @@ export function EventDetail({ props, verified, role }: Props) {
                   View Map
                 </Button>
               </Link>
-              {role !== "customer" && (
+              {role === "superadmin" && (
                 <Link href={`/events/${props.id}/edit`}>
                   <Button variant="outline">Edit Event</Button>
                 </Link>
               )}
             </div>
-            <p className="text-sm md:text-base">{props.description}</p>
+            <p className="text-sm md:text-base">
+              {props.description
+                .replace(/\\n/g, "\n")
+                .split("\n")
+                .map((line, index) => (
+                  <React.Fragment key={index}>
+                    {line}
+                    <br />
+                  </React.Fragment>
+                ))}
+            </p>
             {eventStatus === "upcoming" &&
               props.vipAvailability + props.regulerAvailability <= 10 &&
               props.vipAvailability + props.regulerAvailability >= 1 && (

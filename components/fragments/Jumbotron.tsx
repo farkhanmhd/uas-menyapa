@@ -1,4 +1,5 @@
-import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 import { PiTiktokLogoBold, PiInstagramLogoBold } from "react-icons/pi";
 import Image from "next/image";
 
@@ -15,14 +16,22 @@ export default function Jumbotron() {
       />
       <div className="absolute inset-0 flex flex-col items-center justify-center">
         <div className="flex space-x-2">
-          <Button size="lg">
+          <a
+            href="https://www.instagram.com/uasmenyapa?igsh=MWFncGR0NzVka3o0Nw=="
+            target="_blank"
+            className={cn(buttonVariants({ size: "lg" }))}
+          >
             <PiInstagramLogoBold />
             <span>Instagram</span>
-          </Button>
-          <Button size="lg">
+          </a>
+          <a
+            href="https://www.tiktok.com/@uasmenyapa?_t=ZS-8u5nhl1zlFY&_r=1"
+            target="_blank"
+            className={cn(buttonVariants({ size: "lg" }))}
+          >
             <PiTiktokLogoBold />
             <span>TikTok</span>
-          </Button>
+          </a>
         </div>
       </div>
     </div>

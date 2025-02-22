@@ -11,10 +11,35 @@ export default function Footer() {
               <h3 className="mb-4 text-lg font-semibold text-green-foreground">
                 Contact
               </h3>
-              <p className="text-sm text-green-foreground">
-                Email: uasmenyapa@gmail.com
-                <br />
-                Phone: (123) 456-7890
+              <p className="flex flex-col gap-y-2 text-sm text-green-foreground">
+                <span>Email: uasmenyapa@gmail.com</span>
+                <span>
+                  Phone:{" "}
+                  <a
+                    href="tel:+62895330823800"
+                    className="text-blue-500 hover:underline"
+                  >
+                    +62 895‑3308‑23800
+                  </a>
+                </span>
+                <span>
+                  WhatsApp Admin 1 :{" "}
+                  <a
+                    href="https://wa.me/+62895330823800"
+                    className="text-blue-500 hover:underline"
+                  >
+                    +62 895-3308-23800
+                  </a>
+                </span>
+                <span>
+                  WhatsApp Admin 2 :{" "}
+                  <a
+                    href="https://wa.me/+62895601792191"
+                    className="text-blue-500 hover:underline"
+                  >
+                    +62 895-6017-92191
+                  </a>
+                </span>
               </p>
             </div>
             <div className="text-center md:px-32 md:text-start lg:px-0">
@@ -57,14 +82,16 @@ export default function Footer() {
               </h3>
               <div className="flex justify-center space-x-4 sm:justify-start">
                 <a
-                  href="#"
+                  href="https://www.instagram.com/uasmenyapa?igsh=MWFncGR0NzVka3o0Nw=="
                   className="text-green-foreground hover:text-primary"
+                  target="_blank"
                 >
                   <PiInstagramLogo className="h-6 w-6" />
                 </a>
                 <a
-                  href="#"
+                  href="https://www.tiktok.com/@uasmenyapa?_t=ZS-8u5nhl1zlFY&_r=1"
                   className="text-green-foreground hover:text-primary"
+                  target="_blank"
                 >
                   <PiTiktokLogo className="h-6 w-6" />
                 </a>
@@ -73,7 +100,7 @@ export default function Footer() {
           </div>
         </div>
         <div className="mt-8 pt-8">
-          <p className="text-center text-xs text-green-foreground">
+          <p className="text-center text-sm text-green-foreground">
             &copy; {new Date().getFullYear()} UAS Menyapa. All rights reserved.
           </p>
         </div>

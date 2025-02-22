@@ -1,10 +1,11 @@
 "use client";
 
 import React from "react";
+import { useTransitionRouter } from "next-view-transitions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import ImageUploadDropzone from "@/components/fragments/image-upload";
 import { Label } from "react-aria-components";
 import { cn } from "@/lib/utils";
@@ -78,18 +79,17 @@ export function EventForm({
   setQuestions,
   handleQuestionChange,
 }: EventFormProps) {
+  const { back } = useTransitionRouter();
+
+  const handleCancel = () => back();
+
   return (
     <form action={execute} className="mb-6 space-y-8">
       {/* Title Field */}
       <Card>
+        <CardTitle className="px-6 pt-6 text-2xl">Event Title</CardTitle>
         <CardContent className="pt-6">
           <div className="space-y-2">
-            <Label
-              htmlFor="title"
-              className="text-sm font-medium text-foreground"
-            >
-              Event Title
-            </Label>
             <Input
               name="title"
               id="title"
@@ -110,6 +110,7 @@ export function EventForm({
 
       {/* Image Uploads */}
       <Card>
+        <CardTitle className="px-6 pt-6 text-2xl">Images</CardTitle>
         <CardContent className="pt-6">
           <div className="grid gap-6 md:grid-cols-3">
             <div className="space-y-2">
@@ -165,13 +166,8 @@ export function EventForm({
 
       {/* Description */}
       <Card>
+        <CardTitle className="px-6 pt-6 text-2xl">Event Description</CardTitle>
         <CardContent className="space-y-2 pt-6">
-          <Label
-            htmlFor="description"
-            className="text-sm font-medium text-foreground"
-          >
-            Event Description
-          </Label>
           <Textarea
             name="description"
             id="description"
@@ -191,276 +187,284 @@ export function EventForm({
         </CardContent>
       </Card>
 
-      {/* Venue, City, Times, URLs */}
-      <Card>
-        <CardContent className="pt-6">
-          <div className="grid gap-6 md:grid-cols-2">
-            <div className="space-y-2">
-              <Label
-                htmlFor="venue"
-                className="text-sm font-medium text-foreground"
-              >
-                Venue
-              </Label>
-              <Input
-                name="venue"
-                id="venue"
-                value={data.venue}
-                onChange={handleInputChange}
-                placeholder="Enter venue"
-                className={cn("placeholder:text-sm", {
-                  "border-destructive/80 text-destructive focus-visible:border-destructive/80 focus-visible:ring-destructive/20":
-                    errors.venueError,
-                })}
-              />
-              {errors.venueError && (
-                <p className="text-xs text-destructive">{errors.venueError}</p>
-              )}
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+        {/* Venue, City, Times, URLs */}
+        <Card>
+          <CardTitle className="px-6 pt-6 text-2xl">Event Details</CardTitle>
+          <CardContent className="pt-6">
+            <div className="grid gap-6 md:grid-cols-2">
+              <div className="space-y-2">
+                <Label
+                  htmlFor="venue"
+                  className="text-sm font-medium text-foreground"
+                >
+                  Venue
+                </Label>
+                <Input
+                  name="venue"
+                  id="venue"
+                  value={data.venue}
+                  onChange={handleInputChange}
+                  placeholder="Enter venue"
+                  className={cn("placeholder:text-sm", {
+                    "border-destructive/80 text-destructive focus-visible:border-destructive/80 focus-visible:ring-destructive/20":
+                      errors.venueError,
+                  })}
+                />
+                {errors.venueError && (
+                  <p className="text-xs text-destructive">
+                    {errors.venueError}
+                  </p>
+                )}
+              </div>
+              <div className="space-y-2">
+                <Label
+                  htmlFor="city"
+                  className="text-sm font-medium text-foreground"
+                >
+                  City
+                </Label>
+                <Input
+                  name="city"
+                  id="city"
+                  value={data.city}
+                  onChange={handleInputChange}
+                  placeholder="Enter city"
+                  className={cn("placeholder:text-sm", {
+                    "border-destructive/80 text-destructive focus-visible:border-destructive/80 focus-visible:ring-destructive/20":
+                      errors.cityError,
+                  })}
+                />
+                {errors.cityError && (
+                  <p className="text-xs text-destructive">{errors.cityError}</p>
+                )}
+              </div>
+              <div className="space-y-2">
+                <Label
+                  htmlFor="startTime"
+                  className="text-sm font-medium text-foreground"
+                >
+                  Start Time
+                </Label>
+                <Input
+                  type="datetime-local"
+                  id="startTime"
+                  name="startTime"
+                  value={data.startTime}
+                  onChange={handleInputChange}
+                  className={cn("placeholder:text-sm", {
+                    "border-destructive/80 text-destructive focus-visible:border-destructive/80 focus-visible:ring-destructive/20":
+                      errors.startTimeError,
+                  })}
+                />
+                {errors.startTimeError && (
+                  <p className="text-xs text-destructive">
+                    {errors.startTimeError}
+                  </p>
+                )}
+              </div>
+              <div className="space-y-2">
+                <Label
+                  htmlFor="endTime"
+                  className="text-sm font-medium text-foreground"
+                >
+                  End Time
+                </Label>
+                <Input
+                  type="datetime-local"
+                  id="endTime"
+                  name="endTime"
+                  value={data.endTime}
+                  onChange={handleInputChange}
+                  className={cn("placeholder:text-sm", {
+                    "border-destructive/80 text-destructive focus-visible:border-destructive/80 focus-visible:ring-destructive/20":
+                      errors.endTimeError,
+                  })}
+                />
+                {errors.endTimeError && (
+                  <p className="text-xs text-destructive">
+                    {errors.endTimeError}
+                  </p>
+                )}
+              </div>
+              <div className="space-y-2">
+                <Label
+                  htmlFor="gmapUrl"
+                  className="text-sm font-medium text-foreground"
+                >
+                  Google Maps URL
+                </Label>
+                <Input
+                  name="gmapUrl"
+                  id="gmapUrl"
+                  value={data.gmapUrl}
+                  onChange={handleInputChange}
+                  placeholder="Enter Google Maps URL"
+                  className={cn("placeholder:text-sm", {
+                    "border-destructive/80 text-destructive focus-visible:border-destructive/80 focus-visible:ring-destructive/20":
+                      errors.gmapUrlError,
+                  })}
+                />
+                {errors.gmapUrlError && (
+                  <p className="text-xs text-destructive">
+                    {errors.gmapUrlError}
+                  </p>
+                )}
+              </div>
+              <div className="space-y-2">
+                <Label
+                  htmlFor="whatsappGroupUrl"
+                  className="text-sm font-medium text-foreground"
+                >
+                  WhatsApp Group URL
+                </Label>
+                <Input
+                  name="whatsappGroupUrl"
+                  id="whatsappGroupUrl"
+                  value={data.whatsappGroupUrl}
+                  onChange={handleInputChange}
+                  placeholder="Enter WhatsApp Group URL"
+                  className={cn("placeholder:text-sm", {
+                    "border-destructive/80 text-destructive focus-visible:border-destructive/80 focus-visible:ring-destructive/20":
+                      errors.whatsappGroupUrlError,
+                  })}
+                />
+                {errors.whatsappGroupUrlError && (
+                  <p className="text-xs text-destructive">
+                    {errors.whatsappGroupUrlError}
+                  </p>
+                )}
+              </div>
             </div>
-            <div className="space-y-2">
-              <Label
-                htmlFor="city"
-                className="text-sm font-medium text-foreground"
-              >
-                City
-              </Label>
-              <Input
-                name="city"
-                id="city"
-                value={data.city}
-                onChange={handleInputChange}
-                placeholder="Enter city"
-                className={cn("placeholder:text-sm", {
-                  "border-destructive/80 text-destructive focus-visible:border-destructive/80 focus-visible:ring-destructive/20":
-                    errors.cityError,
-                })}
-              />
-              {errors.cityError && (
-                <p className="text-xs text-destructive">{errors.cityError}</p>
-              )}
-            </div>
-            <div className="space-y-2">
-              <Label
-                htmlFor="startTime"
-                className="text-sm font-medium text-foreground"
-              >
-                Start Time
-              </Label>
-              <Input
-                type="datetime-local"
-                id="startTime"
-                name="startTime"
-                value={data.startTime}
-                onChange={handleInputChange}
-                className={cn("placeholder:text-sm", {
-                  "border-destructive/80 text-destructive focus-visible:border-destructive/80 focus-visible:ring-destructive/20":
-                    errors.startTimeError,
-                })}
-              />
-              {errors.startTimeError && (
-                <p className="text-xs text-destructive">
-                  {errors.startTimeError}
-                </p>
-              )}
-            </div>
-            <div className="space-y-2">
-              <Label
-                htmlFor="endTime"
-                className="text-sm font-medium text-foreground"
-              >
-                End Time
-              </Label>
-              <Input
-                type="datetime-local"
-                id="endTime"
-                name="endTime"
-                value={data.endTime}
-                onChange={handleInputChange}
-                className={cn("placeholder:text-sm", {
-                  "border-destructive/80 text-destructive focus-visible:border-destructive/80 focus-visible:ring-destructive/20":
-                    errors.endTimeError,
-                })}
-              />
-              {errors.endTimeError && (
-                <p className="text-xs text-destructive">
-                  {errors.endTimeError}
-                </p>
-              )}
-            </div>
-            <div className="space-y-2">
-              <Label
-                htmlFor="gmapUrl"
-                className="text-sm font-medium text-foreground"
-              >
-                Google Maps URL
-              </Label>
-              <Input
-                name="gmapUrl"
-                id="gmapUrl"
-                value={data.gmapUrl}
-                onChange={handleInputChange}
-                placeholder="Enter Google Maps URL"
-                className={cn("placeholder:text-sm", {
-                  "border-destructive/80 text-destructive focus-visible:border-destructive/80 focus-visible:ring-destructive/20":
-                    errors.gmapUrlError,
-                })}
-              />
-              {errors.gmapUrlError && (
-                <p className="text-xs text-destructive">
-                  {errors.gmapUrlError}
-                </p>
-              )}
-            </div>
-            <div className="space-y-2">
-              <Label
-                htmlFor="whatsappGroupUrl"
-                className="text-sm font-medium text-foreground"
-              >
-                WhatsApp Group URL
-              </Label>
-              <Input
-                name="whatsappGroupUrl"
-                id="whatsappGroupUrl"
-                value={data.whatsappGroupUrl}
-                onChange={handleInputChange}
-                placeholder="Enter WhatsApp Group URL"
-                className={cn("placeholder:text-sm", {
-                  "border-destructive/80 text-destructive focus-visible:border-destructive/80 focus-visible:ring-destructive/20":
-                    errors.whatsappGroupUrlError,
-                })}
-              />
-              {errors.whatsappGroupUrlError && (
-                <p className="text-xs text-destructive">
-                  {errors.whatsappGroupUrlError}
-                </p>
-              )}
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+          </CardContent>
+        </Card>
 
-      {/* Pricing and Availability */}
-      <Card>
-        <CardContent className="pt-6">
-          <div className="grid gap-6 md:grid-cols-2">
-            <div className="space-y-2">
-              <Label
-                htmlFor="regularPrice"
-                className="text-sm font-medium text-foreground"
-              >
-                Regular Price
-              </Label>
-              <Input
-                type="text"
-                inputMode="numeric"
-                min={1}
-                name="regularPrice"
-                id="regularPrice"
-                value={data.regularPrice}
-                onChange={handleNumberInputChange}
-                placeholder="Enter regular price"
-                className={cn("placeholder:text-sm", {
-                  "border-destructive/80 text-destructive focus-visible:border-destructive/80 focus-visible:ring-destructive/20":
-                    errors.regularPriceError,
-                })}
-              />
-              {errors.regularPriceError && (
-                <p className="text-xs text-destructive">
-                  {errors.regularPriceError}
-                </p>
-              )}
+        {/* Pricing and Availability */}
+        <Card>
+          <CardTitle className="px-6 pt-6 text-2xl">
+            Pricing and Availability
+          </CardTitle>
+          <CardContent className="pt-6">
+            <div className="grid gap-6 md:grid-cols-2">
+              <div className="space-y-2">
+                <Label
+                  htmlFor="regularPrice"
+                  className="text-sm font-medium text-foreground"
+                >
+                  Regular Price
+                </Label>
+                <Input
+                  type="text"
+                  inputMode="numeric"
+                  min={1}
+                  name="regularPrice"
+                  id="regularPrice"
+                  value={data.regularPrice}
+                  onChange={handleNumberInputChange}
+                  placeholder="Enter regular price"
+                  className={cn("placeholder:text-sm", {
+                    "border-destructive/80 text-destructive focus-visible:border-destructive/80 focus-visible:ring-destructive/20":
+                      errors.regularPriceError,
+                  })}
+                />
+                {errors.regularPriceError && (
+                  <p className="text-xs text-destructive">
+                    {errors.regularPriceError}
+                  </p>
+                )}
+              </div>
+              <div className="space-y-2">
+                <Label
+                  htmlFor="vipPrice"
+                  className="text-sm font-medium text-foreground"
+                >
+                  VIP Price
+                </Label>
+                <Input
+                  type="text"
+                  inputMode="numeric"
+                  min={1}
+                  name="vipPrice"
+                  id="vipPrice"
+                  value={data.vipPrice}
+                  onChange={handleNumberInputChange}
+                  placeholder="Enter VIP price"
+                  className={cn("placeholder:text-sm", {
+                    "border-destructive/80 text-destructive focus-visible:border-destructive/80 focus-visible:ring-destructive/20":
+                      errors.vipPriceError,
+                  })}
+                />
+                {errors.vipPriceError && (
+                  <p className="text-xs text-destructive">
+                    {errors.vipPriceError}
+                  </p>
+                )}
+              </div>
+              <div className="space-y-2">
+                <Label
+                  htmlFor="regularAvailability"
+                  className="text-sm font-medium text-foreground"
+                >
+                  Regular Ticket Availability
+                </Label>
+                <Input
+                  type="text"
+                  inputMode="numeric"
+                  min={1}
+                  name="regularAvailability"
+                  id="regularAvailability"
+                  value={data.regularAvailability}
+                  onChange={handleNumberInputChange}
+                  placeholder="Enter regular ticket availability"
+                  className={cn("placeholder:text-sm", {
+                    "focus-visible/ring-destructive/20 border-destructive/80 text-destructive focus-visible:border-destructive/80":
+                      errors.regularAvailabilityError,
+                  })}
+                />
+                {errors.regularAvailabilityError && (
+                  <p className="text-xs text-destructive">
+                    {errors.regularAvailabilityError}
+                  </p>
+                )}
+              </div>
+              <div className="space-y-2">
+                <Label
+                  htmlFor="vipAvailability"
+                  className="text-sm font-medium text-foreground"
+                >
+                  VIP Ticket Availability
+                </Label>
+                <Input
+                  type="text"
+                  inputMode="numeric"
+                  min={1}
+                  name="vipAvailability"
+                  id="vipAvailability"
+                  value={data.vipAvailability}
+                  onChange={handleNumberInputChange}
+                  placeholder="Enter VIP ticket availability"
+                  className={cn("placeholder:text-sm", {
+                    "focus-visible/ring-destructive/20 border-destructive/80 text-destructive focus-visible:border-destructive/80":
+                      errors.vipAvailabilityError,
+                  })}
+                />
+                {errors.vipAvailabilityError && (
+                  <p className="text-xs text-destructive">
+                    {errors.vipAvailabilityError}
+                  </p>
+                )}
+              </div>
             </div>
-            <div className="space-y-2">
-              <Label
-                htmlFor="vipPrice"
-                className="text-sm font-medium text-foreground"
-              >
-                VIP Price
-              </Label>
-              <Input
-                type="text"
-                inputMode="numeric"
-                min={1}
-                name="vipPrice"
-                id="vipPrice"
-                value={data.vipPrice}
-                onChange={handleNumberInputChange}
-                placeholder="Enter VIP price"
-                className={cn("placeholder:text-sm", {
-                  "border-destructive/80 text-destructive focus-visible:border-destructive/80 focus-visible:ring-destructive/20":
-                    errors.vipPriceError,
-                })}
-              />
-              {errors.vipPriceError && (
-                <p className="text-xs text-destructive">
-                  {errors.vipPriceError}
-                </p>
-              )}
-            </div>
-            <div className="space-y-2">
-              <Label
-                htmlFor="regularAvailability"
-                className="text-sm font-medium text-foreground"
-              >
-                Regular Ticket Availability
-              </Label>
-              <Input
-                type="text"
-                inputMode="numeric"
-                min={1}
-                name="regularAvailability"
-                id="regularAvailability"
-                value={data.regularAvailability}
-                onChange={handleNumberInputChange}
-                placeholder="Enter regular ticket availability"
-                className={cn("placeholder:text-sm", {
-                  "focus-visible/ring-destructive/20 border-destructive/80 text-destructive focus-visible:border-destructive/80":
-                    errors.regularAvailabilityError,
-                })}
-              />
-              {errors.regularAvailabilityError && (
-                <p className="text-xs text-destructive">
-                  {errors.regularAvailabilityError}
-                </p>
-              )}
-            </div>
-            <div className="space-y-2">
-              <Label
-                htmlFor="vipAvailability"
-                className="text-sm font-medium text-foreground"
-              >
-                VIP Ticket Availability
-              </Label>
-              <Input
-                type="text"
-                inputMode="numeric"
-                min={1}
-                name="vipAvailability"
-                id="vipAvailability"
-                value={data.vipAvailability}
-                onChange={handleNumberInputChange}
-                placeholder="Enter VIP ticket availability"
-                className={cn("placeholder:text-sm", {
-                  "focus-visible/ring-destructive/20 border-destructive/80 text-destructive focus-visible:border-destructive/80":
-                    errors.vipAvailabilityError,
-                })}
-              />
-              {errors.vipAvailabilityError && (
-                <p className="text-xs text-destructive">
-                  {errors.vipAvailabilityError}
-                </p>
-              )}
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+          </CardContent>
+        </Card>
+      </div>
 
       {/* Questions Section */}
       <Card>
+        <CardTitle className="px-6 pt-6 text-2xl">
+          <h3>Event Questions and Answers</h3>
+        </CardTitle>
         <CardContent className="pt-6">
-          <h3 className="mb-4 text-lg font-semibold">
-            Event Questions and Answers
-          </h3>
           {/*
             Render each question with its respective input fields.
             For each question, allow editing the question and answer.
@@ -534,9 +538,19 @@ export function EventForm({
       </Card>
 
       {/* Submit Button */}
-      <Button className="w-full" disabled={isPending}>
-        {isPending ? "Submitting..." : "Submit"}
-      </Button>
+      <div className="flex w-full justify-between">
+        <Button
+          className="max-w-max"
+          variant="secondary"
+          type="button"
+          onClick={handleCancel}
+        >
+          Cancel
+        </Button>
+        <Button type="submit" className="max-w-max" disabled={isPending}>
+          {isPending ? "Submitting..." : "Submit"}
+        </Button>
+      </div>
     </form>
   );
 }

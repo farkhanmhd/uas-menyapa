@@ -45,7 +45,7 @@ const fileOrStringSchema = z.union([fileSchema, z.string()]);
 
 const createEventSchema = z.object({
   title: z.string().min(1, "Title is required"),
-  description: z.string().min(1, "Description is required"),
+  description: z.string().transform((val) => val.replace(/\n/g, "\\n")),
   venue: z.string().min(1, "Venue is required"),
   city: z.string().min(1, "City is required"),
   startTime: z.string().min(1, "Start time is required"),
@@ -191,7 +191,7 @@ export const createEventAction = actionClient
 const editEventSchema = z.object({
   id: z.string().min(1, "Event id required"),
   title: z.string().optional(),
-  description: z.string().optional(),
+  description: z.string().transform((val) => val.replace(/\n/g, "\\n")),
   venue: z.string().optional(),
   city: z.string().optional(),
   startTime: z.string().optional(),

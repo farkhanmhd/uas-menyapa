@@ -40,8 +40,6 @@ const Ticket: React.FC<{ ticket: TicketType }> = ({ ticket }) => {
     }
   };
 
-  console.log(ticket.ticketDesign);
-
   return (
     <div className="flex w-full flex-col items-center space-y-4">
       <div className="px-0 sm:px-4">
@@ -58,7 +56,7 @@ const Ticket: React.FC<{ ticket: TicketType }> = ({ ticket }) => {
                 fill
               />
               <CardContent className="relative z-10 flex h-full flex-col justify-end bg-transparent p-0">
-                <div className="space-y-4">
+                <div className="space-y-4 bg-white">
                   <div className="mx-8 mt-4 flex flex-col items-center space-y-2 border-b border-dashed border-gray-200 px-6 pb-3">
                     <div className="rounded-md p-2 shadow-sm">
                       <QRCode value={ticket.id} size={120} />
