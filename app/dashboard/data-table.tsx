@@ -12,7 +12,6 @@ import {
   getFilteredRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-
 import {
   Table,
   TableBody,
@@ -22,7 +21,6 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
-
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -39,7 +37,7 @@ import {
   ChevronRight,
   Download,
 } from "lucide-react";
-import * as XLSX from "xlsx";
+import ExcelJS from "exceljs";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -88,11 +86,57 @@ export function DataTable<TData, TValue>({
     },
   });
 
-  const exportToExcel = () => {
-    const worksheet = XLSX.utils.json_to_sheet(data);
-    const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, "Sales Data");
-    XLSX.writeFile(workbook, "sales_data.xlsx");
+  const exportToExcel = async () => {
+    const workbook = new ExcelJS.Workbook();
+    const worksheet = workbook.addWorksheet("Sales Data");
+
+    // Extract headers correctly
+    worksheet.addRow(columns.map((column: any) => column.accessorKey));
+
+    // Add data rows
+    data.forEach((row) => {
+      worksheet.addRow(
+        columns.map((column) => {
+          const key = (column as { accessorKey?: string }).accessorKey;
+          let cellValue = key ? row[key as keyof typeof row] : "";
+          if (cellValue === undefined || cellValue === null) {
+            cellValue = "";
+          }
+          if (typeof cellValue === "object") {
+            try {
+              cellValue = JSON.stringify(cellValue);
+            } catch {
+              cellValue = "";
+            }
+          }
+          return cellValue;
+        }),
+      );
+    });
+
+    // Style the header row
+    const headerRow = worksheet.getRow(1);
+    headerRow.font = { bold: true };
+    headerRow.fill = {
+      type: "pattern",
+      pattern: "solid",
+      fgColor: { argb: "FFD3D3D3" },
+    };
+
+    // Auto-fit columns
+    worksheet.columns.forEach((column) => {
+      column.width = 15;
+    });
+
+    // Generate and download the file
+    const buffer = await workbook.xlsx.writeBuffer();
+    const blob = new Blob([buffer], {
+      type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    });
+    const link = document.createElement("a");
+    link.href = window.URL.createObjectURL(blob);
+    link.download = "sales_data.xlsx";
+    link.click();
   };
 
   return (
@@ -121,8 +165,8 @@ export function DataTable<TData, TValue>({
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="All">All Types</SelectItem>
-              <SelectItem value="vip">VIP</SelectItem>
-              <SelectItem value="reguler">Reguler</SelectItem>
+              <SelectItem value="VIP">VIP</SelectItem>
+              <SelectItem value="Regular">Regular</SelectItem>
             </SelectContent>
           </Select>
           <Select
