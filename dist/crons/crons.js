@@ -44,13 +44,13 @@ var dotenv_1 = require("dotenv");
 var crons = function () {
     console.log("Starting cron jobs");
     // expire orders
-    cron.schedule("* * * * *", function () { return __awaiter(void 0, void 0, void 0, function () {
+    cron.schedule("0 * * * *", function () { return __awaiter(void 0, void 0, void 0, function () {
         var expireOrderResponse, json, error_1, generateCertificateRespons, json, error_2, absenceTicketResponse, json, error_3;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
                     // Run every minute
-                    console.log("Running cron job for every minute");
+                    console.log("Running cron job for every hour");
                     _a.label = 1;
                 case 1:
                     _a.trys.push([1, 4, , 5]);
