@@ -36,7 +36,7 @@ export const POST = async () => {
       })),
     );
 
-    revalidatePath(`/tickets/${tickets.eventId}`);
+    revalidatePath(`/tickets/${tickets.eventId}`, "page");
 
     return NextResponse.json({
       message: "Certificates generated successfully.",

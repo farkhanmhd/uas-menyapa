@@ -50,7 +50,7 @@ var crons = function () {
             switch (_a.label) {
                 case 0:
                     // Run every minute
-                    console.log("Running cron job to expire all orders for every minute");
+                    console.log("Running cron job for every minute");
                     _a.label = 1;
                 case 1:
                     _a.trys.push([1, 4, , 5]);

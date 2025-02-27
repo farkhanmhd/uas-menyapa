@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import db from "@/db";
-import { events, orders, paymentDetails, tickets } from "@/db/schema/public";
-import { sql, eq, and, lt } from "drizzle-orm";
+import { events, orders, paymentDetails } from "@/db/schema/public";
+import { sql, eq, and } from "drizzle-orm";
 import { auth } from "@/auth";
 import {
   loadPurchasedEventsSearchParams,
@@ -61,19 +61,15 @@ export const GET = async (req: NextRequest) => {
 
 export const PUT = async () => {
   try {
-    const updatedRows = await db.transaction(async (tx) => {
-      // Update tickets directly without an extra SELECT query
-      const result = await tx
-        .update(tickets)
-        .set({ presence: "present" })
-        .where(
-          and(eq(tickets.presence, "waiting"), lt(events.endTime, sql`NOW()`)),
-        );
+    const result = await db.execute(sql`
+      UPDATE tickets
+      JOIN events ON tickets.event_id = events.id
+      SET tickets.presence = 'absent'
+      WHERE tickets.presence = 'waiting'
+      AND events.end_time < NOW();
+    `);
 
-      return result[0].affectedRows;
-    });
-
-    if (updatedRows === 0) {
+    if (result[0].affectedRows === 0) {
       return NextResponse.json(
         { error: "No waiting tickets found" },
         { status: 404 },
@@ -82,9 +78,10 @@ export const PUT = async () => {
 
     return NextResponse.json({
       message: "Tickets updated successfully",
-      updatedRows,
+      updatedRows: result[0].affectedRows,
     });
   } catch (error) {
+    console.error("Error updating tickets:", error);
     return NextResponse.json(
       { error: "Error updating tickets" },
       { status: 500 },
