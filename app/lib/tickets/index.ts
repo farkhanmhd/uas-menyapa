@@ -4,7 +4,7 @@ import { PurchasedEvent, Ticket } from "@/types";
 import { headers } from "next/headers";
 import db from "@/db";
 import { tickets, events } from "@/db/schema/public";
-import { eq, and } from "drizzle-orm";
+import { eq, and, sql, gt } from "drizzle-orm";
 import { auth } from "@/auth";
 import { format } from "date-fns";
 
@@ -63,11 +63,17 @@ export const updateTicketPresence = async (ticketId: string) => {
         })
         .from(tickets)
         .innerJoin(events, eq(events.id, tickets.eventId))
-        .where(and(eq(tickets.id, ticketId), eq(tickets.presence, "waiting")))
+        .where(
+          and(
+            eq(tickets.id, ticketId),
+            eq(tickets.presence, "waiting"),
+            gt(events.endTime, sql`NOW()`),
+          ),
+        )
         .limit(1);
 
       if (!ticketRow.length) {
-        throw new Error("Invalid Format or Wrong ID");
+        throw new Error("Invalid Ticket ID, Already Updated, or Event Expired");
       }
 
       await tx

@@ -77,8 +77,8 @@ export default function TermsAndConditionsPage() {
                     <AlertTriangle className="mr-2 mt-0.5 h-5 w-5 flex-shrink-0 text-yellow-500" />
                     <span>
                       Apabila anda membeli melalui pihak lain selain melalui
-                      website sharingtimeuha.com, kami tidak bertanggung jawab
-                      jika terjadi penipuan.
+                      website uasmenyapa.com, kami tidak bertanggung jawab jika
+                      terjadi penipuan.
                     </span>
                   </li>
                   <li>
