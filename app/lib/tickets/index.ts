@@ -63,13 +63,7 @@ export const updateTicketPresence = async (ticketId: string) => {
         })
         .from(tickets)
         .innerJoin(events, eq(events.id, tickets.eventId))
-        .where(
-          and(
-            eq(tickets.id, ticketId),
-            eq(tickets.presence, "waiting"),
-            gt(events.endTime, sql`NOW()`),
-          ),
-        )
+        .where(and(eq(tickets.id, ticketId)))
         .limit(1);
 
       if (!ticketRow.length) {
