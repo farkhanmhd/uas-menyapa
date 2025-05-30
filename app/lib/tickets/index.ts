@@ -4,7 +4,7 @@ import { PurchasedEvent, Ticket } from "@/types";
 import { headers } from "next/headers";
 import db from "@/db";
 import { tickets, events } from "@/db/schema/public";
-import { eq, and, sql, gt } from "drizzle-orm";
+import { eq, and } from "drizzle-orm";
 import { auth } from "@/auth";
 import { format } from "date-fns";
 
